@@ -1,0 +1,1543 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>E67 LL8 Connector Reference — Harness Build Sheet</title>
+<style>
+  @import url('https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;500;700;800&family=Oswald:wght@400;500;600;700&display=swap');
+
+  :root {
+    --bg: #0d1117;
+    --bg-panel: #161b22;
+    --bg-elevated: #1c2128;
+    --bg-sidebar: #0a0d12;
+    --border: #30363d;
+    --border-bright: #484f58;
+    --text: #e6edf3;
+    --text-dim: #8b949e;
+    --text-faded: #6e7681;
+    --accent: #f0883e;
+    --accent-bright: #ffa657;
+
+    --cat-power: #f85149;
+    --cat-ground: #6e7681;
+    --cat-ignition: #ffa657;
+    --cat-comm: #58a6ff;
+    --cat-ref-5v: #d2a8ff;
+    --cat-ref-12v: #f778ba;
+    --cat-sensor: #7ee787;
+    --cat-injector: #ff7b72;
+    --cat-coil: #ffa657;
+    --cat-relay: #79c0ff;
+    --cat-cruise: #a5a5a5;
+    --cat-other: #8b949e;
+    --cat-empty: #21262d;
+
+    --sidebar-width: 320px;
+  }
+
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+
+  body {
+    background: var(--bg);
+    color: var(--text);
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 13px;
+    line-height: 1.5;
+    background-image:
+      repeating-linear-gradient(0deg, rgba(255,255,255,0.012) 0px, rgba(255,255,255,0.012) 1px, transparent 1px, transparent 32px),
+      repeating-linear-gradient(90deg, rgba(255,255,255,0.012) 0px, rgba(255,255,255,0.012) 1px, transparent 1px, transparent 32px);
+  }
+
+  .layout { display: flex; min-height: 100vh; }
+
+  .sidebar {
+    width: var(--sidebar-width);
+    background: var(--bg-sidebar);
+    border-right: 1px solid var(--border);
+    padding: 20px;
+    position: sticky;
+    top: 0;
+    height: 100vh;
+    overflow-y: auto;
+    flex-shrink: 0;
+    display: flex;
+    flex-direction: column;
+    gap: 18px;
+  }
+
+  .sidebar::-webkit-scrollbar { width: 6px; }
+  .sidebar::-webkit-scrollbar-track { background: var(--bg-sidebar); }
+  .sidebar::-webkit-scrollbar-thumb { background: var(--border); border-radius: 3px; }
+
+  .sidebar-section {
+    border-bottom: 1px solid var(--border);
+    padding-bottom: 18px;
+  }
+
+  .sidebar-section:last-child { border-bottom: none; }
+
+  .sidebar-header { position: relative; padding: 4px 0 12px; }
+
+  .sidebar-header::before {
+    content: ""; position: absolute; top: -8px; left: -8px;
+    width: 18px; height: 18px;
+    border-top: 3px solid var(--accent); border-left: 3px solid var(--accent);
+  }
+
+  .sidebar-header h1 {
+    font-family: 'Oswald', sans-serif;
+    font-weight: 700; font-size: 18px;
+    letter-spacing: 0.04em; text-transform: uppercase;
+    line-height: 1.15;
+    margin-bottom: 6px;
+  }
+
+  .sidebar-header .subtitle {
+    color: var(--text-dim);
+    font-size: 9px;
+    letter-spacing: 0.12em;
+    text-transform: uppercase;
+  }
+
+  .sidebar-meta {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 10px;
+    margin-top: 14px;
+  }
+
+  .meta-item-sm { display: flex; flex-direction: column; gap: 2px; }
+
+  .meta-label-sm {
+    font-size: 8px;
+    color: var(--text-faded);
+    text-transform: uppercase;
+    letter-spacing: 0.1em;
+  }
+
+  .meta-value-sm {
+    font-size: 12px;
+    font-weight: 700;
+    color: var(--accent-bright);
+    word-break: break-all;
+  }
+
+  .sidebar-heading {
+    font-family: 'Oswald', sans-serif;
+    font-size: 11px;
+    font-weight: 600;
+    letter-spacing: 0.15em;
+    text-transform: uppercase;
+    color: var(--text-dim);
+    margin-bottom: 10px;
+  }
+
+  .nav-jumps { display: flex; flex-direction: column; gap: 6px; }
+
+  .nav-btn {
+    background: var(--bg-elevated);
+    border: 1px solid var(--border);
+    color: var(--text);
+    font-family: 'Oswald', sans-serif;
+    font-size: 13px;
+    font-weight: 600;
+    padding: 10px 12px;
+    cursor: pointer;
+    text-align: left;
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
+    transition: all 0.1s ease;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 8px;
+  }
+
+  .nav-btn:hover {
+    border-color: var(--accent);
+    color: var(--accent-bright);
+    transform: translateX(2px);
+  }
+
+  .nav-btn-tag {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 9px;
+    padding: 2px 6px;
+    font-weight: 700;
+    letter-spacing: 0.1em;
+  }
+
+  .nav-tag-blue { background: #1f6feb; color: white; }
+  .nav-tag-black { background: #21262d; color: var(--text); border: 1px solid var(--border-bright); }
+  .nav-tag-grey { background: #6e7681; color: var(--bg); }
+
+  .nav-btn-stats {
+    font-size: 9px;
+    color: var(--text-faded);
+    margin-left: auto;
+  }
+
+  .sidebar-warning {
+    background: rgba(248, 81, 73, 0.08);
+    border-left: 3px solid var(--cat-power);
+    padding: 10px 12px;
+    font-size: 11px;
+    color: var(--text);
+    line-height: 1.5;
+  }
+
+  .sidebar-warning strong {
+    display: block;
+    color: var(--cat-power);
+    text-transform: uppercase;
+    letter-spacing: 0.1em;
+    font-size: 10px;
+    margin-bottom: 4px;
+  }
+
+  .legend-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 6px 8px;
+  }
+
+  .legend-item {
+    display: flex; align-items: center;
+    gap: 6px; font-size: 10px;
+    line-height: 1.2;
+  }
+
+  .legend-swatch {
+    width: 14px; height: 14px;
+    border: 1px solid rgba(255,255,255,0.2);
+    flex-shrink: 0;
+  }
+
+  .filter-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 6px;
+  }
+
+  .filter-btn {
+    background: var(--bg-elevated);
+    border: 1px solid var(--border);
+    color: var(--text);
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 10px;
+    padding: 7px 8px;
+    cursor: pointer;
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
+    transition: all 0.1s ease;
+    text-align: center;
+  }
+
+  .filter-btn:hover {
+    border-color: var(--accent);
+    color: var(--accent-bright);
+  }
+
+  .filter-btn.active {
+    background: var(--accent);
+    color: var(--bg);
+    border-color: var(--accent);
+    font-weight: 700;
+  }
+
+  .filter-btn.full { grid-column: 1 / -1; }
+
+  /* MAIN CONTENT */
+  .main {
+    flex: 1;
+    padding: 24px;
+    min-width: 0;
+    overflow-x: auto;
+  }
+
+  .connector-section {
+    margin-bottom: 24px;
+    background: var(--bg-panel);
+    border: 1px solid var(--border);
+    scroll-margin-top: 20px;
+  }
+
+  .connector-header {
+    padding: 14px 24px;
+    border-bottom: 1px solid var(--border);
+    display: flex; align-items: center;
+    justify-content: space-between; gap: 16px;
+  }
+
+  .connector-title {
+    font-family: 'Oswald', sans-serif;
+    font-size: 24px; font-weight: 700;
+    letter-spacing: 0.05em; text-transform: uppercase;
+    display: flex; align-items: center; gap: 16px;
+  }
+
+  .connector-color-tag {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 11px; padding: 4px 10px;
+    font-weight: 600; letter-spacing: 0.1em;
+  }
+
+  .tag-blue { background: #1f6feb; color: white; }
+  .tag-black { background: #21262d; color: var(--text); border: 1px solid var(--border-bright); }
+  .tag-grey { background: #6e7681; color: var(--bg); }
+
+  .connector-stats {
+    font-size: 11px; color: var(--text-dim);
+    text-align: right;
+  }
+
+  .connector-stats strong {
+    color: var(--accent-bright); font-size: 14px;
+  }
+
+  .connector-diagram-wrap {
+    background: var(--bg-elevated);
+    border-bottom: 1px solid var(--border);
+    padding: 24px;
+    display: flex; flex-direction: column;
+    align-items: center; gap: 12px;
+  }
+
+  .diagram-orientation-note {
+    font-size: 10px; color: var(--text-faded);
+    letter-spacing: 0.1em; text-transform: uppercase;
+    text-align: center; max-width: 800px;
+  }
+
+  .connector-svg {
+    max-width: 100%;
+    height: auto;
+  }
+
+  .pin-cell {
+    cursor: pointer;
+    transition: all 0.15s ease;
+  }
+
+  .pin-cell:hover .pin-rect {
+    stroke: var(--accent-bright);
+    stroke-width: 2.5;
+  }
+
+  .pin-rect { stroke: var(--border-bright); stroke-width: 1; }
+  .pin-rect.empty { fill: var(--cat-empty); stroke: var(--border); }
+  .pin-rect.cat-power { fill: var(--cat-power); }
+  .pin-rect.cat-ground { fill: var(--cat-ground); }
+  .pin-rect.cat-ignition { fill: var(--cat-ignition); }
+  .pin-rect.cat-comm { fill: var(--cat-comm); }
+  .pin-rect.cat-ref-5v { fill: var(--cat-ref-5v); }
+  .pin-rect.cat-ref-12v { fill: var(--cat-ref-12v); }
+  .pin-rect.cat-sensor { fill: var(--cat-sensor); }
+  .pin-rect.cat-injector { fill: var(--cat-injector); }
+  .pin-rect.cat-coil { fill: var(--cat-coil); }
+  .pin-rect.cat-relay { fill: var(--cat-relay); }
+  .pin-rect.cat-cruise { fill: var(--cat-cruise); }
+  .pin-rect.cat-other { fill: var(--cat-other); }
+
+  .pin-num-label {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 10px; font-weight: 700;
+    text-anchor: middle;
+    dominant-baseline: middle;
+    pointer-events: none;
+  }
+
+  .pin-num-label.dark { fill: #0d1117; }
+  .pin-num-label.light { fill: #ffffff; }
+  .pin-num-label.empty-text { fill: var(--text-faded); }
+
+  .pin-wire-overlay {
+    pointer-events: none;
+  }
+
+  .row-label {
+    font-family: 'Oswald', sans-serif;
+    font-size: 10px;
+    fill: var(--text-faded);
+    letter-spacing: 0.1em;
+  }
+
+  .corner-label {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 11px; font-weight: 700;
+    fill: var(--accent);
+  }
+
+  .col-label {
+    font-family: 'Oswald', sans-serif;
+    font-size: 11px;
+    fill: var(--text-dim);
+    letter-spacing: 0.1em;
+    font-weight: 600;
+  }
+
+  .connector-frame {
+    fill: none;
+    stroke: var(--border-bright);
+    stroke-width: 2;
+  }
+
+  .pin-info-display {
+    background: var(--bg-elevated);
+    border: 1px dashed var(--border-bright);
+    padding: 12px 20px;
+    margin: 0 24px 16px;
+    min-height: 56px;
+    display: flex; align-items: center;
+    gap: 16px; font-size: 12px;
+  }
+
+  .pin-info-display.empty {
+    color: var(--text-faded);
+    font-style: italic;
+    justify-content: center;
+  }
+
+  .pin-info-num {
+    font-family: 'Oswald', sans-serif;
+    font-size: 28px; font-weight: 700;
+    color: var(--accent-bright);
+    line-height: 1; min-width: 50px;
+  }
+
+  .pin-info-content {
+    flex: 1;
+    display: flex; flex-direction: column; gap: 4px;
+  }
+
+  .pin-info-label {
+    font-size: 14px; font-weight: 600;
+    color: var(--text);
+  }
+
+  .pin-info-meta {
+    display: flex; gap: 16px; align-items: center;
+    font-size: 11px; color: var(--text-dim);
+  }
+
+  .pin-info-wire {
+    display: flex; align-items: center; gap: 6px;
+  }
+
+  .pin-info-swatch {
+    width: 28px; height: 14px;
+    border: 1px solid rgba(255,255,255,0.3);
+  }
+
+  /* Connector-layout card grids - cards arranged spatially to match physical connector */
+  .pin-grid-container {
+    padding: 24px;
+    overflow-x: auto;
+  }
+
+  .pin-grid-x1 {
+    display: grid;
+    grid-template-columns: repeat(4, minmax(220px, 1fr));
+    grid-template-rows: repeat(14, auto);
+    gap: 6px;
+    direction: ltr;
+  }
+
+  /* X2/X3: 2+2 columns plus pin 73 special row above */
+  .pin-grid-73 {
+    display: grid;
+    grid-template-columns: repeat(4, minmax(220px, 1fr));
+    gap: 6px;
+  }
+
+  .pin-grid-73-special {
+    grid-column: 1 / 3;  /* pin 73 spans short side (cols 1+2) */
+    margin-bottom: 4px;
+  }
+
+  .pin-grid-73-cols {
+    display: contents;
+  }
+
+  .pin-cell-wrap {
+    display: flex;
+    flex-direction: column;
+  }
+
+  .pin-cell-wrap .pin-card-slot {
+    margin-bottom: 4px;
+  }
+
+  /* Compact pin card */
+  .pin {
+    background: var(--bg-elevated);
+    border: 1px solid var(--border);
+    padding: 6px 8px 6px 12px;
+    display: grid;
+    grid-template-columns: 32px 1fr;
+    gap: 8px; align-items: center;
+    position: relative;
+    transition: transform 0.1s ease, border-color 0.1s ease;
+    min-height: 56px;
+  }
+
+  .pin:hover, .pin.highlighted {
+    border-color: var(--accent);
+    transform: translateX(2px);
+  }
+
+  .pin.highlighted {
+    box-shadow: 0 0 0 2px var(--accent), 0 0 16px rgba(240,136,62,0.3);
+    z-index: 2;
+  }
+
+  /* Empty cavity placeholder card */
+  .pin-empty {
+    background: rgba(33, 38, 45, 0.4);
+    border: 1px dashed var(--border);
+    padding: 6px 8px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    min-height: 56px;
+    color: var(--text-faded);
+    font-size: 11px;
+    font-family: 'Oswald', sans-serif;
+    letter-spacing: 0.1em;
+  }
+
+  .pin-empty .empty-num {
+    opacity: 0.5;
+    font-weight: 600;
+  }
+
+  .pin-number {
+    font-family: 'Oswald', sans-serif;
+    font-size: 18px; font-weight: 700;
+    color: var(--text);
+    text-align: center;
+    border-right: 1px solid var(--border);
+    padding-right: 6px; line-height: 1;
+  }
+
+  .pin-content {
+    display: flex; flex-direction: column;
+    gap: 3px; min-width: 0;
+  }
+
+  .pin-wire-row {
+    display: flex; align-items: center;
+    gap: 6px; font-size: 10px;
+  }
+
+  .wire-swatch {
+    width: 28px; height: 14px;
+    border: 1px solid rgba(255,255,255,0.3);
+    flex-shrink: 0; position: relative;
+  }
+
+  .pin-wire-text {
+    font-weight: 700; font-size: 11px;
+    letter-spacing: 0.05em;
+    color: var(--text);
+  }
+
+  .pin-circuit {
+    color: var(--text-faded);
+    font-size: 9px; margin-left: auto;
+  }
+
+  .pin-gauge {
+    color: var(--text-faded);
+    font-size: 9px;
+  }
+
+  .pin-label {
+    font-size: 10px; color: var(--text);
+    line-height: 1.25;
+    overflow: hidden;
+  }
+
+  .pin-cat-bar {
+    position: absolute;
+    left: 0; top: 0; bottom: 0;
+    width: 4px;
+  }
+
+  .cat-power { background: var(--cat-power); }
+  .cat-ground { background: var(--cat-ground); }
+  .cat-ignition { background: var(--cat-ignition); }
+  .cat-comm { background: var(--cat-comm); }
+  .cat-ref-5v { background: var(--cat-ref-5v); }
+  .cat-ref-12v { background: var(--cat-ref-12v); }
+  .cat-sensor { background: var(--cat-sensor); }
+  .cat-injector { background: var(--cat-injector); }
+  .cat-coil { background: var(--cat-coil); }
+  .cat-relay { background: var(--cat-relay); }
+  .cat-cruise { background: var(--cat-cruise); }
+  .cat-other { background: var(--cat-other); }
+
+  .v4l2-tag {
+    display: inline-block;
+    background: rgba(240, 136, 62, 0.15);
+    color: var(--accent-bright);
+    padding: 1px 5px;
+    font-size: 9px; font-weight: 600;
+    letter-spacing: 0.05em;
+    margin-left: 4px;
+  }
+
+  /* Verification status */
+  .pin-status-bar {
+    position: absolute;
+    top: 0; left: 4px; right: 0;
+    height: 3px;
+    pointer-events: none;
+  }
+  .status-unverified { background: var(--accent); }
+  .status-verified { background: #56d364; }
+  .status-suspect { background: var(--cat-power); }
+
+  .pin-status-dot { pointer-events: none; }
+  .pin-status-dot.status-unverified { fill: var(--accent); }
+  .pin-status-dot.status-verified { fill: #56d364; }
+  .pin-status-dot.status-suspect { fill: var(--cat-power); }
+  .pin-cell.dim .pin-status-dot { opacity: 0.18; }
+
+  .verify-actions {
+    display: flex;
+    gap: 6px;
+    margin-left: auto;
+    align-self: stretch;
+    align-items: center;
+  }
+  .verify-btn {
+    background: var(--bg-panel);
+    border: 1px solid var(--border);
+    color: var(--text);
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 10px;
+    padding: 6px 10px;
+    cursor: pointer;
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
+    transition: all 0.1s ease;
+    white-space: nowrap;
+  }
+  .verify-btn:hover { border-color: var(--accent); color: var(--accent-bright); }
+  .verify-btn.btn-verified { border-color: #56d364; color: #56d364; background: rgba(86, 211, 100, 0.08); }
+  .verify-btn.btn-suspect { border-color: var(--cat-power); color: var(--cat-power); background: rgba(248, 81, 73, 0.08); }
+
+  .pin-info-note {
+    font-size: 11px;
+    color: var(--cat-power);
+    margin-top: 4px;
+    font-style: italic;
+    line-height: 1.4;
+  }
+
+  .connector-progress {
+    font-size: 10px;
+    color: var(--text-faded);
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+    margin-top: 4px;
+  }
+  .connector-progress strong { color: var(--text); }
+  .connector-progress .verified-count { color: #56d364; }
+  .connector-progress .suspect-count { color: var(--cat-power); }
+
+  .reset-btn {
+    width: 100%;
+    margin-top: 10px;
+    background: var(--bg-elevated);
+    border: 1px solid var(--border);
+    color: var(--text-dim);
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 10px;
+    padding: 7px 8px;
+    cursor: pointer;
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
+    transition: all 0.1s ease;
+  }
+  .reset-btn:hover { border-color: var(--cat-power); color: var(--cat-power); }
+
+  .wire-OG { background: #ff8c1a; }
+  .wire-PK { background: #ffb6c1; }
+  .wire-PU { background: #9d4edd; }
+  .wire-BK { background: #1a1a1a; }
+  .wire-WH { background: #f0f0f0; }
+  .wire-RD { background: #e63946; }
+  .wire-BN { background: #6f4e37; }
+  .wire-YE { background: #ffd60a; }
+  .wire-GY { background: #999; }
+  .wire-TN { background: #d4a373; }
+  .wire-D-GN { background: #1a5e3a; }
+  .wire-L-BU { background: #87ceeb; }
+  .wire-D-BU { background: #1d3557; }
+  .wire-L-GN { background: #90ee90; }
+
+  .wire-GY-BK { background: linear-gradient(to bottom, #999 50%, #1a1a1a 50%); }
+  .wire-BN-WH { background: linear-gradient(to bottom, #6f4e37 50%, #f0f0f0 50%); }
+  .wire-D-GN-WH { background: linear-gradient(to bottom, #1a5e3a 50%, #f0f0f0 50%); }
+  .wire-WH-BK { background: linear-gradient(to bottom, #f0f0f0 50%, #1a1a1a 50%); }
+  .wire-PK-BK { background: linear-gradient(to bottom, #ffb6c1 50%, #1a1a1a 50%); }
+  .wire-YE-BK { background: linear-gradient(to bottom, #ffd60a 50%, #1a1a1a 50%); }
+  .wire-PU-WH { background: linear-gradient(to bottom, #9d4edd 50%, #f0f0f0 50%); }
+  .wire-TN-WH { background: linear-gradient(to bottom, #d4a373 50%, #f0f0f0 50%); }
+  .wire-BK-WH { background: linear-gradient(to bottom, #1a1a1a 50%, #f0f0f0 50%); }
+  .wire-OG-BK { background: linear-gradient(to bottom, #ff8c1a 50%, #1a1a1a 50%); }
+  .wire-RD-WH { background: linear-gradient(to bottom, #e63946 50%, #f0f0f0 50%); }
+  .wire-RD-BK { background: linear-gradient(to bottom, #e63946 50%, #1a1a1a 50%); }
+  .wire-L-BU-WH { background: linear-gradient(to bottom, #87ceeb 50%, #f0f0f0 50%); }
+  .wire-L-BU-BK { background: linear-gradient(to bottom, #87ceeb 50%, #1a1a1a 50%); }
+  .wire-D-BU-WH { background: linear-gradient(to bottom, #1d3557 50%, #f0f0f0 50%); }
+  .wire-L-GN-BK { background: linear-gradient(to bottom, #90ee90 50%, #1a1a1a 50%); }
+  .wire-PK-WH { background: linear-gradient(to bottom, #ffb6c1 50%, #f0f0f0 50%); }
+
+  .footer-notes {
+    background: var(--bg-panel);
+    border: 1px solid var(--border);
+    padding: 24px;
+    margin-top: 24px;
+  }
+
+  .footer-notes h3 {
+    font-family: 'Oswald', sans-serif;
+    font-size: 16px;
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+    margin-bottom: 12px;
+    color: var(--accent-bright);
+  }
+
+  .footer-notes ul {
+    list-style: none;
+    display: flex; flex-direction: column; gap: 8px;
+  }
+
+  .footer-notes li {
+    padding-left: 20px; position: relative;
+    font-size: 12px; color: var(--text-dim);
+  }
+
+  .footer-notes li::before {
+    content: "▸";
+    position: absolute; left: 0;
+    color: var(--accent);
+  }
+
+  .pin.dim { opacity: 0.15; }
+  .pin-cell.dim .pin-rect { opacity: 0.18; }
+  .pin-cell.dim .pin-num-label { opacity: 0.18; }
+
+  /* Wire color view toggle */
+  .view-toggle {
+    display: flex;
+    gap: 6px;
+    margin-bottom: 12px;
+  }
+
+  .view-toggle-btn {
+    background: var(--bg-elevated);
+    border: 1px solid var(--border);
+    color: var(--text);
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 10px;
+    padding: 6px 12px;
+    cursor: pointer;
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
+    transition: all 0.1s ease;
+  }
+
+  .view-toggle-btn.active {
+    background: var(--accent);
+    color: var(--bg);
+    border-color: var(--accent);
+    font-weight: 700;
+  }
+
+  @media (max-width: 900px) {
+    .layout { flex-direction: column; }
+    .sidebar {
+      width: 100%;
+      height: auto;
+      position: static;
+      border-right: none;
+      border-bottom: 1px solid var(--border);
+    }
+    .legend-grid, .filter-grid { grid-template-columns: repeat(3, 1fr); }
+    .sidebar-meta { grid-template-columns: repeat(4, 1fr); }
+  }
+
+  @media print {
+    body { background: white; color: black; padding: 0; }
+    .layout { display: block; }
+    .sidebar { display: none; }
+    .pin { page-break-inside: avoid; border-color: #999; background: white; color: black; }
+    .pin-number, .pin-label, .pin-wire-text { color: black; }
+    .connector-section { background: white; border-color: #333; page-break-inside: avoid; }
+  }
+</style>
+</head>
+<body>
+
+<div class="layout">
+
+  <aside class="sidebar">
+    <div class="sidebar-section sidebar-header">
+      <h1>E67 LL8<br>Connector Reference</h1>
+      <div class="subtitle">Atlas 4.2L I6 — 2008-2009 Trailblazer</div>
+
+      <div class="sidebar-meta">
+        <div class="meta-item-sm"><span class="meta-label-sm">Part No</span><span class="meta-value-sm">12618163</span></div>
+        <div class="meta-item-sm"><span class="meta-label-sm">Service No</span><span class="meta-value-sm">12607096</span></div>
+        <div class="meta-item-sm"><span class="meta-label-sm">Broadcast</span><span class="meta-value-sm">YRH</span></div>
+        <div class="meta-item-sm"><span class="meta-label-sm">Verified</span><span class="meta-value-sm">2026-04-28</span></div>
+      </div>
+    </div>
+
+    <div class="sidebar-section">
+      <div class="sidebar-heading">Jump to Connector</div>
+      <div class="nav-jumps">
+        <button class="nav-btn" data-jump="section-x1">
+          X1 / J1
+          <span class="nav-btn-tag nav-tag-blue">BLUE 56</span>
+          <span class="nav-btn-stats">30/56</span>
+        </button>
+        <button class="nav-btn" data-jump="section-x2">
+          X2 / J2
+          <span class="nav-btn-tag nav-tag-black">BLACK 73</span>
+          <span class="nav-btn-stats">43/73</span>
+        </button>
+        <button class="nav-btn" data-jump="section-x3">
+          X3 / J3
+          <span class="nav-btn-tag nav-tag-grey">GREY 73</span>
+          <span class="nav-btn-stats">22/73</span>
+        </button>
+      </div>
+    </div>
+
+    <div class="sidebar-section">
+      <div class="sidebar-warning">
+        <strong>CAN polarity is fixed</strong>
+        X3-33 = CAN Low (TN, 2501)<br>
+        X3-53 = CAN High (TN/WH, 2500)<br>
+        Inversion will prevent ECM communication.
+      </div>
+    </div>
+
+    <div class="sidebar-section">
+      <div class="sidebar-heading">Verification Status</div>
+      <div class="legend-grid">
+        <div class="legend-item"><div class="legend-swatch" style="background:#f0883e"></div>Unverified</div>
+        <div class="legend-item"><div class="legend-swatch" style="background:#56d364"></div>Verified</div>
+        <div class="legend-item"><div class="legend-swatch" style="background:#f85149"></div>Suspect</div>
+      </div>
+      <div id="overall-progress" style="margin-top: 10px; font-size: 10px; color: var(--text-faded); letter-spacing: 0.08em; text-transform: uppercase;"></div>
+      <button class="reset-btn" id="reset-verifications">Reset All Verifications</button>
+    </div>
+
+    <div class="sidebar-section">
+      <div class="sidebar-heading">View Mode</div>
+      <div class="view-toggle">
+        <button class="view-toggle-btn active" data-view="function">By Function</button>
+        <button class="view-toggle-btn" data-view="wire">By Wire Color</button>
+      </div>
+      <div style="font-size: 10px; color: var(--text-faded); line-height: 1.4;">
+        Function view colors pins by category. Wire view shows actual jacket colors.
+      </div>
+    </div>
+
+    <div class="sidebar-section">
+      <div class="sidebar-heading">Filter by Category</div>
+      <div class="filter-grid">
+        <button class="filter-btn full active" data-filter="all">All Pins</button>
+        <button class="filter-btn" data-filter="cat-power">Power</button>
+        <button class="filter-btn" data-filter="cat-ignition">Ignition</button>
+        <button class="filter-btn" data-filter="cat-ground">Ground</button>
+        <button class="filter-btn" data-filter="cat-comm">CAN</button>
+        <button class="filter-btn" data-filter="cat-ref-5v">5V Ref</button>
+        <button class="filter-btn" data-filter="cat-ref-12v">12V Ref</button>
+        <button class="filter-btn" data-filter="cat-sensor">Sensors</button>
+        <button class="filter-btn" data-filter="cat-injector">Injectors</button>
+        <button class="filter-btn" data-filter="cat-coil">Coils</button>
+        <button class="filter-btn" data-filter="cat-relay">Relays</button>
+        <button class="filter-btn full" data-filter="cat-cruise">Cruise/Body</button>
+      </div>
+    </div>
+
+    <div class="sidebar-section">
+      <div class="sidebar-heading">Color Key</div>
+      <div class="legend-grid">
+        <div class="legend-item"><div class="legend-swatch cat-power"></div>Battery</div>
+        <div class="legend-item"><div class="legend-swatch cat-ignition"></div>Ign/Coil</div>
+        <div class="legend-item"><div class="legend-swatch cat-ground"></div>Ground</div>
+        <div class="legend-item"><div class="legend-swatch cat-comm"></div>CAN</div>
+        <div class="legend-item"><div class="legend-swatch cat-ref-5v"></div>5V Ref</div>
+        <div class="legend-item"><div class="legend-swatch cat-ref-12v"></div>12V Ref</div>
+        <div class="legend-item"><div class="legend-swatch cat-sensor"></div>Sensor</div>
+        <div class="legend-item"><div class="legend-swatch cat-injector"></div>Injector</div>
+        <div class="legend-item"><div class="legend-swatch cat-relay"></div>Relay</div>
+        <div class="legend-item"><div class="legend-swatch cat-cruise"></div>Cruise</div>
+        <div class="legend-item"><div class="legend-swatch cat-other"></div>Other</div>
+        <div class="legend-item"><div class="legend-swatch" style="background:#21262d; border-color:var(--border);"></div>Empty</div>
+      </div>
+    </div>
+  </aside>
+
+  <main class="main">
+
+    <section class="connector-section" id="section-x1">
+      <div class="connector-header">
+        <div class="connector-title">X1 / J1<span class="connector-color-tag tag-blue">BLUE — 56 PIN</span></div>
+        <div class="connector-stats">
+          <div><strong>30</strong> populated / 56 cavity</div>
+          <div id="progress-x1" class="connector-progress"></div>
+        </div>
+      </div>
+      <div class="connector-diagram-wrap">
+        <div class="diagram-orientation-note">Installed orientation (back-of-connector view, harness side) — 4 columns × 14 rows — Pin 1 bottom-left, Pin 56 top-right. Pin number markers cast on bottom edge.</div>
+        <svg class="connector-svg" id="svg-x1"></svg>
+      </div>
+      <div class="pin-info-display empty" id="info-x1"><span>Click any pin in the diagram above for details</span></div>
+      <div class="pin-grid-container"><div class="pin-grid-x1" id="grid-x1"></div></div>
+    </section>
+
+    <section class="connector-section" id="section-x2">
+      <div class="connector-header">
+        <div class="connector-title">X2 / J2<span class="connector-color-tag tag-black">BLACK — 73 PIN</span></div>
+        <div class="connector-stats">
+          <div><strong>43</strong> populated / 73 cavity</div>
+          <div id="progress-x2" class="connector-progress"></div>
+        </div>
+      </div>
+      <div class="connector-diagram-wrap">
+        <div class="diagram-orientation-note">Installed orientation (back-of-connector view) — 2+2 column structure: short side (left) has 2 columns of 16 pins (1-16, 17-32). Long side (right) has 2 columns of 20 pins (33-52, 53-72). Pin 73 in special position above short side, larger cavity (heavy gauge ground).</div>
+        <svg class="connector-svg" id="svg-x2"></svg>
+      </div>
+      <div class="pin-info-display empty" id="info-x2"><span>Click any pin in the diagram above for details</span></div>
+      <div class="pin-grid-container"><div class="pin-grid-73" id="grid-x2"></div></div>
+    </section>
+
+    <section class="connector-section" id="section-x3">
+      <div class="connector-header">
+        <div class="connector-title">X3 / J3<span class="connector-color-tag tag-grey">GREY — 73 PIN</span></div>
+        <div class="connector-stats">
+          <div><strong>22</strong> populated / 73 cavity</div>
+          <div id="progress-x3" class="connector-progress"></div>
+        </div>
+      </div>
+      <div class="connector-diagram-wrap">
+        <div class="diagram-orientation-note">Same physical layout as X2. Far fewer populated pins on the 4.2L (most 5.3L-only AFM and bank 2 pins are unused).</div>
+        <svg class="connector-svg" id="svg-x3"></svg>
+      </div>
+      <div class="pin-info-display empty" id="info-x3"><span>Click any pin in the diagram above for details</span></div>
+      <div class="pin-grid-container"><div class="pin-grid-73" id="grid-x3"></div></div>
+    </section>
+
+    <div class="footer-notes">
+      <h3>Build Notes & Anomalies</h3>
+      <ul>
+        <li>Two pins both labeled "Starter Enable Relay Control": <strong>X1-56 (YE/BK, 625)</strong> and <strong>X2-43 (YE, 6259, 4.2L)</strong>. Verify primary against factory wiring diagram before final connection.</li>
+        <li>Two pins both labeled "IC 4 Control" with circuit 2124: <strong>X2-18 (D-GN/WH, 0.5mm²)</strong> and <strong>X2-34 (D-GN/WH, 0.35mm²)</strong>. Same circuit on two pins is unusual — verify before wiring coils.</li>
+        <li>Wire gauge guide: 0.35mm² ≈ 22 AWG, 0.5mm² ≈ 20 AWG, 1.0mm² ≈ 18 AWG (primary ground X2-73 is heavy gauge).</li>
+        <li>Color codes: BK=Black, BN=Brown, RD=Red, OG=Orange, YE=Yellow, GN=Green, BU=Blue, PU=Purple, GY=Gray, WH=White, PK=Pink, TN=Tan. Prefix D-=Dark, L-=Light.</li>
+        <li>Two-tone wire format: BASE/TRACER. The first color is the insulation jacket, the second is the stripe.</li>
+        <li>4.2L tag indicates pin function is specific to the Atlas I6 calibration. Same physical pin position may have different function on 5.3L variant.</li>
+        <li>For bench flash minimum: power = X1-20 (B+); ignition = X1-18, X1-19, X2-13 tied; ground = X2-73 + low refs; CAN = X3-33 (low) + X3-53 (high).</li>
+        <li><strong>Connector layouts verified 2026-04-28</strong> against physical X1, X2, X3 connectors. X1: 4 cols × 14 rows uniform. X2/X3: 2+2 column structure — short side (left) 2 columns of 16 pins, long side (right) 2 columns of 20 pins, plus pin 73 in special larger position above short side.</li>
+      </ul>
+    </div>
+
+  </main>
+
+</div>
+
+<script src="data/pins.js"></script>
+<script>
+// PIN_DATA and WIRE_COLORS are loaded from data/pins.js — single source of truth.
+// Edit pin facts there, not here.
+
+function getWireColors(wire) {
+  // Returns [primary, tracer] or [primary, null]
+  if (wire.includes('-')) {
+    // Could be "D-GN" (single dark green) or "GY-BK" (gray base / black tracer)
+    // Single-color prefix codes: D-GN, D-BU, L-BU, L-GN
+    const singles = ['D-GN', 'D-BU', 'L-BU', 'L-GN'];
+    if (singles.includes(wire)) {
+      return [WIRE_COLORS[wire] || '#888', null];
+    }
+    // Two-tone: split on first - that's not a prefix
+    // Try to match longest prefix first
+    for (const single of singles) {
+      if (wire.startsWith(single + '-')) {
+        const tracer = wire.substring(single.length + 1);
+        return [WIRE_COLORS[single] || '#888', WIRE_COLORS[tracer] || '#888'];
+      }
+    }
+    // Otherwise simple split
+    const parts = wire.split('-');
+    return [WIRE_COLORS[parts[0]] || '#888', WIRE_COLORS[parts[1]] || '#888'];
+  }
+  return [WIRE_COLORS[wire] || '#888', null];
+}
+
+const LIGHT_TEXT_CATS = ['cat-power', 'cat-ground', 'cat-comm', 'cat-injector', 'cat-other', 'cat-cruise'];
+const DARK_WIRE_COLORS = ['BK', 'D-GN', 'D-BU', 'BN', 'PU']; // wires that need light text
+
+function getPinTextClass(cat) {
+  if (!cat) return 'empty-text';
+  return LIGHT_TEXT_CATS.includes(cat) ? 'light' : 'dark';
+}
+
+function getWireTextClass(wire) {
+  // For wire color view, dark wires need light text
+  const primary = wire.split('-')[0];
+  const singles = ['D-GN', 'D-BU', 'L-BU', 'L-GN'];
+  let baseColor = wire;
+  if (!singles.includes(wire) && wire.includes('-')) {
+    baseColor = primary;
+  }
+  return DARK_WIRE_COLORS.includes(baseColor) || singles.slice(0,2).includes(baseColor) ? 'light' : 'dark';
+}
+
+let currentView = 'function';
+
+function getPinFillClass(connKey, pin) {
+  const data = PIN_DATA[connKey][pin];
+  if (!data) return 'empty';
+  return data.cat;
+}
+
+// Render a single pin cell - includes both function-color rect AND wire-color overlay rect
+function renderPinCell(connKey, pin, x, y, w, h) {
+  const data = PIN_DATA[connKey][pin];
+  if (!data) {
+    // Empty cavity
+    let html = `<g class="pin-cell" data-conn="${connKey}" data-pin="${pin}" data-cat="empty">`;
+    html += `<rect class="pin-rect empty" x="${x}" y="${y}" width="${w}" height="${h}" rx="2"/>`;
+    html += `<text class="pin-num-label empty-text" x="${x + w/2}" y="${y + h/2 + 1}">${pin}</text>`;
+    html += `</g>`;
+    return html;
+  }
+
+  const cat = data.cat;
+  const textClass = getPinTextClass(cat);
+  const wireTextClass = getWireTextClass(data.wire);
+  const [primaryColor, tracerColor] = getWireColors(data.wire);
+
+  let html = `<g class="pin-cell" data-conn="${connKey}" data-pin="${pin}" data-cat="${cat}">`;
+
+  // Function-mode rect (visible by default)
+  html += `<rect class="pin-rect ${cat} function-fill" x="${x}" y="${y}" width="${w}" height="${h}" rx="2"/>`;
+
+  // Wire-mode rects (hidden by default)
+  if (tracerColor) {
+    // Two-tone: primary on top half, tracer on bottom half
+    html += `<rect class="pin-rect wire-fill" x="${x}" y="${y}" width="${w}" height="${h/2}" fill="${primaryColor}" stroke="#484f58" style="display:none"/>`;
+    html += `<rect class="pin-rect wire-fill" x="${x}" y="${y + h/2}" width="${w}" height="${h/2}" fill="${tracerColor}" stroke="#484f58" style="display:none"/>`;
+    // Outline rect for the cell
+    html += `<rect class="pin-rect wire-fill wire-outline" x="${x}" y="${y}" width="${w}" height="${h}" fill="none" stroke="#484f58" stroke-width="1" rx="2" style="display:none"/>`;
+  } else {
+    html += `<rect class="pin-rect wire-fill" x="${x}" y="${y}" width="${w}" height="${h}" fill="${primaryColor}" stroke="#484f58" rx="2" style="display:none"/>`;
+  }
+
+  // Pin number text - two versions, one for each view mode
+  html += `<text class="pin-num-label function-text ${textClass}" x="${x + w/2}" y="${y + h/2 + 1}">${pin}</text>`;
+  html += `<text class="pin-num-label wire-text ${wireTextClass}" x="${x + w/2}" y="${y + h/2 + 1}" style="display:none">${pin}</text>`;
+
+  // Verification status dot (top-right corner)
+  const status = getStatus(connKey, pin);
+  html += `<circle class="pin-status-dot status-${status}" data-conn="${connKey}" data-pin="${pin}" cx="${x + w - 4}" cy="${y + 4}" r="2.5"/>`;
+
+  html += `</g>`;
+  return html;
+}
+
+function renderX1() {
+  const svg = document.getElementById('svg-x1');
+  // 4 columns × 14 rows, portrait orientation
+  // Pin 1 = bottom-left, pin 14 = top-left
+  // Pin 15 = bottom of col 2, pin 28 = top of col 2
+  // Pin 29 = bottom of col 3, pin 42 = top of col 3
+  // Pin 43 = bottom-right, pin 56 = top-right
+
+  const cellW = 38, cellH = 28, gap = 3;
+  const offsetX = 60, offsetY = 30;
+  const numCols = 4, numRows = 14;
+
+  let html = '';
+  const bodyW = numCols * (cellW + gap) - gap + 30;
+  const bodyH = numRows * (cellH + gap) - gap + 30;
+
+  html += `<rect class="connector-frame" x="${offsetX - 15}" y="${offsetY - 15}" width="${bodyW}" height="${bodyH}" rx="8"/>`;
+
+  for (let col = 0; col < numCols; col++) {
+    const startPin = 1 + col * 14; // 1, 15, 29, 43
+    for (let row = 0; row < numRows; row++) {
+      // row 0 = top of column, row 13 = bottom
+      // pin number: bottom (row 13) = startPin, top (row 0) = startPin + 13
+      const pin = startPin + (13 - row);
+      const x = offsetX + col * (cellW + gap);
+      const y = offsetY + row * (cellH + gap);
+      html += renderPinCell('x1', pin, x, y, cellW, cellH);
+    }
+  }
+
+  // Corner labels
+  const bottomY = offsetY + 13 * (cellH + gap) + cellH + 6;
+  const topY = offsetY - 8;
+  const leftX = offsetX - 4;
+  const rightX = offsetX + 3 * (cellW + gap) + cellW - 28;
+
+  html += `<text class="corner-label" x="${leftX}" y="${bottomY + 16}">PIN 1</text>`;
+  html += `<text class="corner-label" x="${leftX}" y="${topY}">PIN 14</text>`;
+  html += `<text class="corner-label" x="${rightX}" y="${bottomY + 16}">PIN 43</text>`;
+  html += `<text class="corner-label" x="${rightX}" y="${topY}">PIN 56</text>`;
+
+  // Column labels
+  for (let col = 0; col < numCols; col++) {
+    const startPin = 1 + col * 14;
+    const endPin = startPin + 13;
+    const colCenterX = offsetX + col * (cellW + gap) + cellW/2;
+    html += `<text class="col-label" x="${colCenterX}" y="${bottomY + 32}" text-anchor="middle">${startPin}-${endPin}</text>`;
+  }
+
+  // "Bottom edge — pin markers cast here"
+  html += `<text class="row-label" x="${offsetX + bodyW/2 - 15}" y="${bottomY + 50}" text-anchor="middle">↑ BOTTOM EDGE (pin markers cast on connector body)</text>`;
+
+  svg.innerHTML = html;
+  svg.setAttribute('viewBox', `0 0 ${Math.max(bodyW + 60, 540)} ${bodyH + 70}`);
+}
+
+function render73Pin(svgId, connKey) {
+  const svg = document.getElementById(svgId);
+  // 4 columns of varying heights: 16, 17, 19, 20 pins
+  // All columns bottom-aligned (start at same y)
+  // Plus pin 73 in special position above column 1 (slightly larger)
+  //
+  // Column 1: pins 1-16 (16 pins), bottom = pin 1
+  // Column 2: pins 17-33 (17 pins), bottom = pin 17
+  // Column 3: pins 34-52 (19 pins), bottom = pin 34
+  // Column 4: pins 53-72 (20 pins), bottom = pin 53
+  // Pin 73: special position above column 1
+
+  const cellW = 32, cellH = 24, gap = 2;
+  const offsetX = 50, offsetY = 60;  // extra top room for pin 73
+  const colSizes = [16, 16, 20, 20];
+  const colStartPins = [1, 17, 33, 53];
+
+  // Calculate connector dimensions
+  const numCols = 4;
+  const maxRows = Math.max(...colSizes); // 20
+  const bodyW = numCols * (cellW + gap) - gap + 30;
+  const bodyH = maxRows * (cellH + gap) - gap + 50; // extra for pin 73
+
+  // Bottom y-coordinate (where all columns align)
+  const bottomY = offsetY + maxRows * (cellH + gap) - gap;
+
+  let html = '';
+
+  // Outer frame
+  html += `<rect class="connector-frame" x="${offsetX - 15}" y="${offsetY - 35}" width="${bodyW}" height="${bodyH + 20}" rx="8"/>`;
+
+  // Render columns - each column bottom-aligned
+  for (let col = 0; col < numCols; col++) {
+    const colSize = colSizes[col];
+    const startPin = colStartPins[col];
+    const x = offsetX + col * (cellW + gap);
+
+    for (let i = 0; i < colSize; i++) {
+      // i=0 is bottom of column = startPin
+      // i=colSize-1 is top of column = startPin + colSize - 1
+      const pin = startPin + i;
+      // y position: bottom column gets bottomY, going up
+      const y = bottomY - cellH - i * (cellH + gap);
+      html += renderPinCell(connKey, pin, x, y, cellW, cellH);
+    }
+  }
+
+  // Pin 73 - special position above the short side (centered over columns 1 AND 2)
+  // Slightly larger cavity to indicate heavy gauge
+  {
+    const pin = 73;
+    const specialW = cellW * 2 + gap; // span both short-side columns width
+    const specialH = cellH + 6;
+    // Top of short side is at bottomY - cellH - 15 * (cellH + gap) (column 1 has 16 pins, indices 0-15)
+    const shortSideTopY = bottomY - cellH - 15 * (cellH + gap);
+    const x = offsetX; // align with start of column 1
+    const y = shortSideTopY - specialH - 6;
+    html += renderPinCell(connKey, pin, x, y, specialW, specialH);
+  }
+
+  // Corner labels
+  html += `<text class="corner-label" x="${offsetX - 4}" y="${bottomY + cellH + 6}">PIN 1</text>`;
+  html += `<text class="corner-label" x="${offsetX + 3 * (cellW + gap) + cellW - 30}" y="${bottomY + cellH + 6}">PIN 53</text>`;
+
+  // Column top pin labels
+  const col1TopPin = 16;
+  const col2TopPin = 33;
+  const col3TopPin = 52;
+  const col4TopPin = 72;
+  const col1TopY = bottomY - cellH - 15 * (cellH + gap);
+  const col2TopY = bottomY - cellH - 16 * (cellH + gap);
+  const col3TopY = bottomY - cellH - 18 * (cellH + gap);
+  const col4TopY = bottomY - cellH - 19 * (cellH + gap);
+
+  // Column labels at bottom
+  const colLabelY = bottomY + cellH + 26;
+  for (let col = 0; col < numCols; col++) {
+    const startPin = colStartPins[col];
+    const endPin = startPin + colSizes[col] - 1;
+    const colCenterX = offsetX + col * (cellW + gap) + cellW/2;
+    html += `<text class="col-label" x="${colCenterX}" y="${colLabelY}" text-anchor="middle">${startPin}-${endPin}</text>`;
+  }
+
+  // Pin 73 label
+  html += `<text class="corner-label" x="${offsetX + cellW + gap/2}" y="${offsetY - 18}" text-anchor="middle">PIN 73</text>`;
+
+  // Bottom edge note
+  html += `<text class="row-label" x="${offsetX + bodyW/2 - 15}" y="${colLabelY + 32}" text-anchor="middle">↑ BOTTOM EDGE (pin markers cast on connector body)</text>`;
+
+  svg.innerHTML = html;
+  svg.setAttribute('viewBox', `0 0 ${Math.max(bodyW + 50, 540)} ${bodyH + 80}`);
+}
+
+// Verification status (persisted in localStorage, with PIN_DATA.verified as default)
+const STATUS_KEY = 'e67_pin_status_v1';
+function loadStatuses() {
+  try { return JSON.parse(localStorage.getItem(STATUS_KEY)) || {}; }
+  catch (e) { return {}; }
+}
+function saveStatuses(s) {
+  localStorage.setItem(STATUS_KEY, JSON.stringify(s));
+}
+let pinStatuses = loadStatuses();
+
+function getStatus(connKey, pin) {
+  const key = connKey + '-' + pin;
+  if (pinStatuses[key]) return pinStatuses[key];
+  const d = PIN_DATA[connKey][pin];
+  if (d && d.verified === 'suspect') return 'suspect';
+  if (d && d.verified === true) return 'verified';
+  return 'unverified';
+}
+
+function setStatus(connKey, pin, status) {
+  const key = connKey + '-' + pin;
+  if (status === 'unverified') delete pinStatuses[key];
+  else pinStatuses[key] = status;
+  saveStatuses(pinStatuses);
+  refreshPinDisplay(connKey, pin);
+  updateProgressCounts();
+}
+
+function refreshPinDisplay(connKey, pin) {
+  const status = getStatus(connKey, pin);
+  document.querySelectorAll('.pin-status-dot[data-conn="' + connKey + '"][data-pin="' + pin + '"]').forEach(el => {
+    el.setAttribute('class', 'pin-status-dot status-' + status);
+  });
+  document.querySelectorAll('.pin-status-bar[data-conn="' + connKey + '"][data-pin="' + pin + '"]').forEach(el => {
+    el.className = 'pin-status-bar status-' + status;
+  });
+  showPinInfo(connKey, pin);
+}
+
+function updateProgressCounts() {
+  let totalAll = 0, verifiedAll = 0, suspectAll = 0;
+  for (const conn of ['x1', 'x2', 'x3']) {
+    let verified = 0, suspect = 0, total = 0;
+    for (const pin in PIN_DATA[conn]) {
+      total++;
+      const s = getStatus(conn, parseInt(pin));
+      if (s === 'verified') verified++;
+      else if (s === 'suspect') suspect++;
+    }
+    totalAll += total; verifiedAll += verified; suspectAll += suspect;
+    const el = document.getElementById('progress-' + conn);
+    if (el) {
+      let html = '<span class="verified-count">' + verified + '</span>/<strong>' + total + '</strong> verified';
+      if (suspect) html += ' · <span class="suspect-count">' + suspect + '</span> suspect';
+      el.innerHTML = html;
+    }
+  }
+  const overall = document.getElementById('overall-progress');
+  if (overall) {
+    let html = '<span style="color:#56d364">' + verifiedAll + '</span>/<strong style="color:var(--text)">' + totalAll + '</strong> pins verified';
+    if (suspectAll) html += ' · <span style="color:var(--cat-power)">' + suspectAll + '</span> suspect';
+    overall.innerHTML = html;
+  }
+}
+
+// Build a single pin card HTML
+function buildPinCard(connKey, pin) {
+  const d = PIN_DATA[connKey][pin];
+  if (!d) {
+    return `<div class="pin-empty"><span class="empty-num">PIN ${pin} — empty</span></div>`;
+  }
+  const v42 = d.v42 ? '<span class="v4l2-tag">4.2L</span>' : '';
+  const status = getStatus(connKey, pin);
+  let html = `<div class="pin" data-conn="${connKey}" data-pin="${pin}" data-cat="${d.cat}">`;
+  html += `<div class="pin-cat-bar ${d.cat}"></div>`;
+  html += `<div class="pin-status-bar status-${status}" data-conn="${connKey}" data-pin="${pin}"></div>`;
+  html += `<div class="pin-number">${pin}</div>`;
+  html += `<div class="pin-content">`;
+  html += `<div class="pin-wire-row">`;
+  html += `<div class="wire-swatch wire-${d.wire}"></div>`;
+  html += `<span class="pin-wire-text">${d.wire}</span>`;
+  html += `<span class="pin-gauge">${d.gauge}</span>`;
+  html += `<span class="pin-circuit">${d.circuit}</span>`;
+  html += `</div>`;
+  html += `<div class="pin-label">${d.label}${v42}</div>`;
+  html += `</div></div>`;
+  return html;
+}
+
+// X1: 4 columns × 14 rows. Pin 1 bottom-left, 14 top-left, 43 bottom-right, 56 top-right.
+// CSS grid renders top-to-bottom, left-to-right by default.
+// We need: row 1 (top) = 14, 28, 42, 56; row 14 (bottom) = 1, 15, 29, 43
+function renderPinGridX1() {
+  const grid = document.getElementById('grid-x1');
+  let html = '';
+  // Iterate row by row (top to bottom = row 0 to row 13)
+  // Within each row, iterate column 0 to 3 (left to right)
+  // Pin number for column c, row r (with r=0 top): startPin[c] + (13 - r)
+  const colStartPins = [1, 15, 29, 43];
+  for (let row = 0; row < 14; row++) {
+    for (let col = 0; col < 4; col++) {
+      const pin = colStartPins[col] + (13 - row);
+      html += buildPinCard('x1', pin);
+    }
+  }
+  grid.innerHTML = html;
+}
+
+// X2/X3: 2+2 column structure with pin 73 special above short side
+// Short side (left): 2 cols × 16 pins each = pins 1-16, 17-32
+// Long side (right): 2 cols × 20 pins each = pins 33-52, 53-72
+// Pin 73: above short side
+//
+// Total grid layout:
+// - Pin 73 spans cols 1-2 in row 0
+// - Then rows for pin positions: max 20 rows for the long side
+// - Short side starts 4 rows below long side (since long is 20 pins tall, short is 16 pins tall, both bottom-aligned)
+//
+// Grid structure: 21 rows × 4 columns
+// Row 0: Pin 73 (cols 1-2 spanning)
+// Rows 1-4: Empty (where short side hasn't started yet, but long side has)
+//   - Cols 1-2: empty placeholder (or skip)
+//   - Cols 3-4: long side top portion (pins 52, 51, 50, 49 / 72, 71, 70, 69)
+// Rows 5-20 (16 rows): Short side full + long side bottom 16 rows
+//   - Col 1: pins 16, 15, 14, ... 1 (top to bottom)
+//   - Col 2: pins 32, 31, 30, ... 17
+//   - Col 3: pins 48, 47, ... 33 (these are the bottom 16 of col 3 which has pins 33-52)
+//     Wait - col 3 has pins 33-52 which is 20 pins. Bottom 16 = pins 33-48.
+//   - Col 4: pins 68, 67, ... 53
+//
+// Actually let me redo this. Easier to think of it as:
+// - 20 rows for long-side columns (cols 3,4) bottom-aligned
+// - 16 rows for short-side columns (cols 1,2) bottom-aligned
+// - 4 rows of "empty" at top of short side (because long side is 4 taller)
+// - Pin 73 spans cols 1-2 above all of that
+//
+// CSS Grid: 22 rows total (1 for pin 73 + 1 spacer + 20 for the bottom-aligned columns)
+// Actually simpler: 21 rows total (1 for pin 73 + 20 for columns)
+//   Row 0: Pin 73 (col span 1-2), cols 3-4 empty/blank
+//   Rows 1-4: Cols 1-2 empty placeholder, Cols 3-4 = top of long-side columns
+//   Rows 5-20: All four columns populated with bottom 16 pins
+function renderPinGrid73(connKey, gridId) {
+  const grid = document.getElementById(gridId);
+  let html = '';
+
+  // Row 0: Pin 73 special card spanning cols 1-2, blank for cols 3-4
+  html += `<div class="pin-grid-73-special">${buildPinCard(connKey, 73)}</div>`;
+  html += `<div></div><div></div>`;  // cols 3-4 blank for row 0
+
+  // Rows 1-20: 20 rows for bottom-aligned columns
+  // For each row r (0-indexed from top of column area, so r=0 is row 1 of grid):
+  //   Short side (cols 1-2) only renders if r >= 4 (first 4 rows are empty)
+  //   Long side (cols 3-4) always renders
+  //
+  // Pin numbers from top:
+  //   Col 1 top pin = 16, bottom = 1
+  //   Col 2 top pin = 32, bottom = 17
+  //   Col 3 top pin = 52, bottom = 33
+  //   Col 4 top pin = 72, bottom = 53
+  //
+  // For grid row r (0 to 19):
+  //   Long side col 3 pin = 52 - r (range 52..33)
+  //   Long side col 4 pin = 72 - r (range 72..53)
+  //   Short side col 1: when r >= 4, pin = 16 - (r - 4) = 20 - r (range 16..1)
+  //   Short side col 2: when r >= 4, pin = 32 - (r - 4) = 36 - r (range 32..17)
+
+  for (let r = 0; r < 20; r++) {
+    // Col 1 (short)
+    if (r < 4) {
+      html += `<div></div>`;  // blank, no card
+    } else {
+      const pin = 20 - r;
+      html += buildPinCard(connKey, pin);
+    }
+    // Col 2 (short)
+    if (r < 4) {
+      html += `<div></div>`;
+    } else {
+      const pin = 36 - r;
+      html += buildPinCard(connKey, pin);
+    }
+    // Col 3 (long)
+    html += buildPinCard(connKey, 52 - r);
+    // Col 4 (long)
+    html += buildPinCard(connKey, 72 - r);
+  }
+
+  grid.innerHTML = html;
+}
+
+function showPinInfo(connKey, pin) {
+  const display = document.getElementById('info-' + connKey);
+  const data = PIN_DATA[connKey][pin];
+  if (!data) {
+    display.className = 'pin-info-display empty';
+    display.innerHTML = `<span>Pin ${pin} — not populated for 4.2L application</span>`;
+    return;
+  }
+  const v42 = data.v42 ? '<span class="v4l2-tag">4.2L</span>' : '';
+  const status = getStatus(connKey, pin);
+  const noteHtml = data.note ? `<div class="pin-info-note">⚠ ${data.note}</div>` : '';
+  const verifyClass = status === 'verified' ? 'btn-verified' : '';
+  const suspectClass = status === 'suspect' ? 'btn-suspect' : '';
+  const verifyLabel = status === 'verified' ? '✓ Verified' : 'Mark Verified';
+  const suspectLabel = status === 'suspect' ? '⚠ Suspect' : 'Mark Suspect';
+  display.className = 'pin-info-display';
+  display.innerHTML = `
+    <div class="pin-info-num">${pin}</div>
+    <div class="pin-info-content">
+      <div class="pin-info-label">${data.label}${v42}</div>
+      <div class="pin-info-meta">
+        <div class="pin-info-wire">
+          <div class="pin-info-swatch wire-${data.wire}"></div>
+          <span style="font-weight:700; color:var(--text);">${data.wire}</span>
+        </div>
+        <span>Gauge: <strong style="color:var(--text);">${data.gauge}mm²</strong></span>
+        <span>Circuit: <strong style="color:var(--text);">${data.circuit}</strong></span>
+      </div>
+      ${noteHtml}
+    </div>
+    <div class="verify-actions">
+      <button class="verify-btn ${verifyClass}" data-action="verified" data-conn="${connKey}" data-pin="${pin}">${verifyLabel}</button>
+      <button class="verify-btn ${suspectClass}" data-action="suspect" data-conn="${connKey}" data-pin="${pin}">${suspectLabel}</button>
+    </div>
+  `;
+}
+
+renderX1();
+render73Pin('svg-x2', 'x2');
+render73Pin('svg-x3', 'x3');
+renderPinGridX1();
+renderPinGrid73('x2', 'grid-x2');
+renderPinGrid73('x3', 'grid-x3');
+
+document.querySelectorAll('.pin-cell').forEach(cell => {
+  cell.addEventListener('click', () => {
+    const conn = cell.dataset.conn;
+    const pin = cell.dataset.pin;
+    showPinInfo(conn, parseInt(pin));
+
+    document.querySelectorAll('.pin.highlighted').forEach(p => p.classList.remove('highlighted'));
+    const targetCard = document.querySelector(`.pin[data-conn="${conn}"][data-pin="${pin}"]`);
+    if (targetCard) {
+      targetCard.classList.add('highlighted');
+      targetCard.scrollIntoView({ behavior: 'smooth', block: 'center' });
+    }
+  });
+});
+
+const filterBtns = document.querySelectorAll('.filter-btn');
+filterBtns.forEach(btn => {
+  btn.addEventListener('click', () => {
+    filterBtns.forEach(b => b.classList.remove('active'));
+    btn.classList.add('active');
+    const filter = btn.dataset.filter;
+
+    document.querySelectorAll('.pin').forEach(pin => {
+      if (filter === 'all') pin.classList.remove('dim');
+      else pin.classList.toggle('dim', pin.dataset.cat !== filter);
+    });
+
+    document.querySelectorAll('.pin-cell').forEach(pin => {
+      if (filter === 'all') pin.classList.remove('dim');
+      else pin.classList.toggle('dim', pin.dataset.cat !== filter);
+    });
+  });
+});
+
+// View mode toggle
+const viewBtns = document.querySelectorAll('.view-toggle-btn');
+viewBtns.forEach(btn => {
+  btn.addEventListener('click', () => {
+    viewBtns.forEach(b => b.classList.remove('active'));
+    btn.classList.add('active');
+    const view = btn.dataset.view;
+    currentView = view;
+
+    if (view === 'wire') {
+      document.querySelectorAll('.function-fill').forEach(el => el.style.display = 'none');
+      document.querySelectorAll('.wire-fill').forEach(el => el.style.display = '');
+      document.querySelectorAll('.function-text').forEach(el => el.style.display = 'none');
+      document.querySelectorAll('.wire-text').forEach(el => el.style.display = '');
+    } else {
+      document.querySelectorAll('.function-fill').forEach(el => el.style.display = '');
+      document.querySelectorAll('.wire-fill').forEach(el => el.style.display = 'none');
+      document.querySelectorAll('.function-text').forEach(el => el.style.display = '');
+      document.querySelectorAll('.wire-text').forEach(el => el.style.display = 'none');
+    }
+  });
+});
+
+document.querySelectorAll('.nav-btn').forEach(btn => {
+  btn.addEventListener('click', () => {
+    const target = document.getElementById(btn.dataset.jump);
+    if (target) target.scrollIntoView({ behavior: 'smooth', block: 'start' });
+  });
+});
+
+// Verify-button delegation: clicking the active state un-sets to unverified
+document.body.addEventListener('click', e => {
+  const btn = e.target.closest('.verify-btn[data-action]');
+  if (!btn) return;
+  const conn = btn.dataset.conn;
+  const pin = parseInt(btn.dataset.pin);
+  const action = btn.dataset.action;
+  const current = getStatus(conn, pin);
+  setStatus(conn, pin, current === action ? 'unverified' : action);
+});
+
+// Reset all verifications (clears localStorage; suspect markers from PIN_DATA remain)
+document.getElementById('reset-verifications').addEventListener('click', () => {
+  if (!confirm('Clear all verification marks? Suspect flags from the source data will remain.')) return;
+  pinStatuses = {};
+  saveStatuses(pinStatuses);
+  // Re-render every pin's status visuals
+  for (const conn of ['x1', 'x2', 'x3']) {
+    for (const pin in PIN_DATA[conn]) refreshPinDisplay(conn, parseInt(pin));
+  }
+  // Clear info displays
+  for (const conn of ['x1', 'x2', 'x3']) {
+    const el = document.getElementById('info-' + conn);
+    el.className = 'pin-info-display empty';
+    el.innerHTML = '<span>Click any pin in the diagram above for details</span>';
+  }
+  updateProgressCounts();
+});
+
+updateProgressCounts();
+</script>
+
+</body>
+</html>

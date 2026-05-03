@@ -1,0 +1,338 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>E67 LL8 Wiring Reference</title>
+<style>
+@import url('https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;500;700&family=Oswald:wght@400;600;700&display=swap');
+
+* { box-sizing: border-box; margin: 0; padding: 0; }
+
+:root {
+  --bg: #0d1117;
+  --bg-card: #161b22;
+  --bg-elevated: #1c2128;
+  --border: #30363d;
+  --border-bright: #484f58;
+  --text: #e6edf3;
+  --text-dim: #8b949e;
+  --text-faded: #6e7681;
+  --accent: #f0883e;
+  --accent-bright: #ffa657;
+  --connector-blue: #1f6feb;
+  --connector-grey: #8b949e;
+  --systems-green: #3fb950;
+}
+
+body {
+  background: var(--bg);
+  color: var(--text);
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 14px;
+  line-height: 1.6;
+  min-height: 100vh;
+  background-image:
+    repeating-linear-gradient(0deg, rgba(255,255,255,0.012) 0px, rgba(255,255,255,0.012) 1px, transparent 1px, transparent 32px),
+    repeating-linear-gradient(90deg, rgba(255,255,255,0.012) 0px, rgba(255,255,255,0.012) 1px, transparent 1px, transparent 32px);
+}
+
+.container {
+  max-width: 1100px;
+  margin: 0 auto;
+  padding: 60px 32px;
+}
+
+.header {
+  border-bottom: 1px solid var(--border);
+  padding-bottom: 32px;
+  margin-bottom: 40px;
+  position: relative;
+}
+
+.header::before {
+  content: "";
+  position: absolute;
+  top: -8px;
+  left: -12px;
+  width: 24px;
+  height: 24px;
+  border-top: 3px solid var(--accent);
+  border-left: 3px solid var(--accent);
+}
+
+.title {
+  font-family: 'Oswald', sans-serif;
+  font-size: 36px;
+  font-weight: 700;
+  letter-spacing: 0.05em;
+  text-transform: uppercase;
+  line-height: 1.1;
+  margin-bottom: 8px;
+}
+
+.subtitle {
+  font-size: 13px;
+  color: var(--text-dim);
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+}
+
+.meta-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
+  gap: 16px;
+  margin-top: 24px;
+}
+
+.meta-item {
+  background: var(--bg-card);
+  border: 1px solid var(--border);
+  padding: 12px 16px;
+}
+
+.meta-label {
+  font-size: 9px;
+  color: var(--text-faded);
+  letter-spacing: 0.15em;
+  text-transform: uppercase;
+  margin-bottom: 4px;
+}
+
+.meta-value {
+  font-size: 14px;
+  font-weight: 700;
+  color: var(--accent-bright);
+}
+
+.intro {
+  font-size: 14px;
+  color: var(--text-dim);
+  line-height: 1.7;
+  margin-bottom: 40px;
+  max-width: 720px;
+}
+
+.intro strong { color: var(--text); }
+
+.cards {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(360px, 1fr));
+  gap: 20px;
+  margin-bottom: 40px;
+}
+
+.view-card {
+  background: var(--bg-card);
+  border: 1px solid var(--border);
+  padding: 28px;
+  text-decoration: none;
+  color: var(--text);
+  transition: all 0.15s ease;
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+}
+
+.view-card:hover {
+  border-color: var(--accent);
+  transform: translateY(-2px);
+  box-shadow: 0 4px 20px rgba(0,0,0,0.3);
+}
+
+.view-card.connectors { border-left: 4px solid var(--connector-blue); }
+.view-card.systems { border-left: 4px solid var(--systems-green); }
+
+.view-tag {
+  font-size: 10px;
+  letter-spacing: 0.15em;
+  text-transform: uppercase;
+  color: var(--text-faded);
+  font-weight: 600;
+}
+
+.view-title {
+  font-family: 'Oswald', sans-serif;
+  font-size: 22px;
+  font-weight: 700;
+  letter-spacing: 0.05em;
+  text-transform: uppercase;
+  color: var(--accent-bright);
+}
+
+.view-desc {
+  font-size: 13px;
+  color: var(--text-dim);
+  line-height: 1.6;
+  flex: 1;
+}
+
+.view-features {
+  list-style: none;
+  font-size: 11px;
+  color: var(--text-faded);
+}
+
+.view-features li {
+  padding: 3px 0 3px 14px;
+  position: relative;
+}
+
+.view-features li::before {
+  content: "▸";
+  position: absolute;
+  left: 0;
+  color: var(--accent);
+}
+
+.view-arrow {
+  font-family: 'Oswald', sans-serif;
+  font-size: 12px;
+  color: var(--accent);
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  font-weight: 600;
+  margin-top: 4px;
+}
+
+.bench-block {
+  background: var(--bg-card);
+  border: 1px solid var(--border);
+  border-left: 4px solid var(--accent);
+  padding: 24px 28px;
+  margin-bottom: 32px;
+}
+
+.bench-title {
+  font-family: 'Oswald', sans-serif;
+  font-size: 14px;
+  letter-spacing: 0.15em;
+  text-transform: uppercase;
+  color: var(--accent-bright);
+  margin-bottom: 12px;
+}
+
+.bench-table {
+  width: 100%;
+  font-size: 12px;
+  border-collapse: collapse;
+}
+
+.bench-table td {
+  padding: 5px 10px 5px 0;
+  border-bottom: 1px solid rgba(255,255,255,0.05);
+}
+
+.bench-table td:first-child {
+  color: var(--text-dim);
+  width: 40%;
+}
+
+.bench-table td:nth-child(2) {
+  font-weight: 700;
+  color: var(--accent-bright);
+}
+
+.footer {
+  border-top: 1px solid var(--border);
+  padding-top: 24px;
+  font-size: 11px;
+  color: var(--text-faded);
+  line-height: 1.7;
+}
+
+.footer a {
+  color: var(--accent);
+  text-decoration: none;
+}
+
+.footer a:hover { text-decoration: underline; }
+</style>
+</head>
+<body>
+
+<div class="container">
+
+  <header class="header">
+    <h1 class="title">E67 LL8<br>Wiring Reference</h1>
+    <div class="subtitle">2008–2009 Trailblazer · 4.2L Atlas I6 · ECM 12618163 (YRH)</div>
+
+    <div class="meta-grid">
+      <div class="meta-item">
+        <div class="meta-label">ECM Part No</div>
+        <div class="meta-value">12618163</div>
+      </div>
+      <div class="meta-item">
+        <div class="meta-label">Service No</div>
+        <div class="meta-value">12607096</div>
+      </div>
+      <div class="meta-item">
+        <div class="meta-label">Broadcast</div>
+        <div class="meta-value">YRH</div>
+      </div>
+      <div class="meta-item">
+        <div class="meta-label">Verified</div>
+        <div class="meta-value">2026-04-28</div>
+      </div>
+    </div>
+  </header>
+
+  <p class="intro">
+    Two views of the same data. <strong>Connector view</strong> answers "I'm holding the harness — what's in cavity 47?" <strong>Systems view</strong> answers "I'm wiring the bench harness — what does the fuel pump circuit need?" Pin facts are sourced from <code>data/pins.js</code> and verified against physical X1, X2, X3 connectors pulled from a 2008 Trailblazer donor.
+  </p>
+
+  <div class="cards">
+
+    <a class="view-card connectors" href="connectors.html">
+      <div class="view-tag">Layout 01</div>
+      <div class="view-title">Connector View</div>
+      <div class="view-desc">
+        Spatial pin diagrams matching the back-of-connector orientation, organized by physical connector (X1 blue / X2 black / X3 grey).
+      </div>
+      <ul class="view-features">
+        <li>Click-through pin detail panel</li>
+        <li>Wire-color toggle (function vs. jacket color)</li>
+        <li>Verification tracking with localStorage</li>
+        <li>Filter by category (power · ground · CAN · sensors · injectors · coils)</li>
+      </ul>
+      <div class="view-arrow">Open connector view →</div>
+    </a>
+
+    <a class="view-card systems" href="systems.html">
+      <div class="view-tag">Layout 02</div>
+      <div class="view-title">Systems View</div>
+      <div class="view-desc">
+        Circuit cards grouped by functional system. Includes bench-flash recipe with NANKADF supply settings, OBDII J1962 pinout for MPVI4, and 121Ω terminator notes.
+      </div>
+      <ul class="view-features">
+        <li>Search bar (pin · circuit · wire color · function)</li>
+        <li>Collapsible system sections</li>
+        <li>Bench-flash minimum wiring with power-supply settings</li>
+        <li>OBDII pinout table for HP Tuners hookup</li>
+      </ul>
+      <div class="view-arrow">Open systems view →</div>
+    </a>
+
+  </div>
+
+  <div class="bench-block">
+    <div class="bench-title">⚡ Bench Flash Minimum — Quick Reference</div>
+    <table class="bench-table">
+      <tr><td>Battery Positive (constant B+)</td><td>X1 — 20</td><td>OG · circuit 240</td></tr>
+      <tr><td>Ignition (tie all three)</td><td>X1-18 · X1-19 · X2-13</td><td>PK · 1020 / 439 / 839</td></tr>
+      <tr><td>Primary Ground</td><td>X2 — 73</td><td>BK/WH · 1.0mm² · circuit 451</td></tr>
+      <tr><td>CAN High (→ OBDII pin 6)</td><td>X3 — 53</td><td>TN/WH · circuit 2500</td></tr>
+      <tr><td>CAN Low (→ OBDII pin 14)</td><td>X3 — 33</td><td>TN · circuit 2501</td></tr>
+    </table>
+  </div>
+
+  <footer class="footer">
+    Sources: GM SI factory diagrams · Vortec4200 Wiki (Nivlac57) · physical connector verification 2026-04-28.<br>
+    See <a href="https://github.com/breton-training/e67-ll8-wiring">repo</a> for project notes and the four pre-flagged suspect pins requiring factory-diagram verification.
+  </footer>
+
+</div>
+
+</body>
+</html>

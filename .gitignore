@@ -1,0 +1,19 @@
+# OS / sync artifacts
+.DS_Store
+Thumbs.db
+desktop.ini
+Icon?
+
+# iCloud sync stubs
+.iCloud*
+*.icloud
+
+# Editor/IDE
+.vscode/
+.idea/
+*.swp
+*~
+
+# Local notes / scratch
+scratch/
+*.local.*
