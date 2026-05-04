@@ -1663,45 +1663,41 @@ function applyFilters() {
   const sectionMatches = { x1: 0, x2: 0, x3: 0 };
   let totalMatches = 0;
 
+  const filterActive = (filter !== 'all') || (query !== '');
+
   document.querySelectorAll('.pin').forEach(card => {
     const conn = card.dataset.conn;
     const pinNum = parseInt(card.dataset.pin);
     const cat = card.dataset.cat;
-    let visible = true;
-    let isSearchMatch = false;
-    if (filter !== 'all' && cat !== filter) visible = false;
-    if (query) {
-      if (!pinMatchesSearch(conn, pinNum, query)) visible = false;
-      else if (visible) isSearchMatch = true;
-    }
+    const matchesFilter = filter === 'all' || cat === filter;
+    const matchesQuery = !query || pinMatchesSearch(conn, pinNum, query);
+    const visible = matchesFilter && matchesQuery;
+    const isMatch = visible && filterActive;
     card.classList.toggle('dim', !visible);
-    card.classList.toggle('search-match', isSearchMatch);
-    if (visible && query) { sectionMatches[conn]++; totalMatches++; }
+    card.classList.toggle('search-match', isMatch);
+    if (isMatch) { sectionMatches[conn]++; totalMatches++; }
   });
 
-  // Empty placeholder cards: dim during any active filter or search
+  // Empty placeholder cards: dim whenever any filter/search is active
   document.querySelectorAll('.pin-empty').forEach(el => {
-    el.classList.toggle('dim', query !== '' || filter !== 'all');
+    el.classList.toggle('dim', filterActive);
   });
 
   document.querySelectorAll('.pin-cell').forEach(cell => {
     const conn = cell.dataset.conn;
     const pinNum = parseInt(cell.dataset.pin);
     const cat = cell.dataset.cat;
-    let visible = true;
-    let isSearchMatch = false;
-    if (filter !== 'all' && cat !== filter) visible = false;
-    if (query) {
-      if (!pinMatchesSearch(conn, pinNum, query)) visible = false;
-      else if (visible) isSearchMatch = true;
-    }
+    const matchesFilter = filter === 'all' || cat === filter;
+    const matchesQuery = !query || pinMatchesSearch(conn, pinNum, query);
+    const visible = matchesFilter && matchesQuery;
+    const isMatch = visible && filterActive;
     cell.classList.toggle('dim', !visible);
-    cell.classList.toggle('search-match', isSearchMatch);
+    cell.classList.toggle('search-match', isMatch);
   });
 
-  // Search isolates: connectors WITH matches expand, others collapse.
-  // When search clears, restore the user's saved collapsed state.
-  if (query) {
+  // Any active filter/search isolates: connectors WITH matches expand, others collapse.
+  // When everything clears, restore the user's saved collapsed state.
+  if (filterActive) {
     for (const conn of ['x1', 'x2', 'x3']) {
       const sec = document.getElementById('section-' + conn);
       if (!sec) continue;
@@ -1720,7 +1716,7 @@ function applyFilters() {
 
   const info = document.getElementById('searchResultsInfo');
   if (info) {
-    if (!query) {
+    if (!filterActive) {
       info.textContent = '';
       info.className = 'search-results-info';
     } else if (totalMatches === 0) {
@@ -1842,7 +1838,16 @@ viewBtns.forEach(btn => {
 document.querySelectorAll('.nav-btn').forEach(btn => {
   btn.addEventListener('click', () => {
     const target = document.getElementById(btn.dataset.jump);
-    if (target) target.scrollIntoView({ behavior: 'smooth', block: 'start' });
+    if (!target) return;
+    // Expand the target connector if collapsed, and persist that intent
+    if (target.classList.contains('collapsed')) {
+      target.classList.remove('collapsed');
+      flashConnectorIcon(target.querySelector('.connector-collapse-icon'));
+      const state = loadCollapsedState();
+      delete state[target.id];
+      saveCollapsedState(state);
+    }
+    target.scrollIntoView({ behavior: 'smooth', block: 'start' });
   });
 });
 
