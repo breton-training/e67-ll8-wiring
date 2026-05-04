@@ -128,21 +128,67 @@ body {
   padding: 28px;
   text-decoration: none;
   color: var(--text);
-  transition: all 0.15s ease;
+  transition: all 0.22s ease;
   position: relative;
   display: flex;
   flex-direction: column;
   gap: 12px;
+  cursor: pointer;
+  overflow: hidden;
 }
 
+.view-card::after {
+  content: "";
+  position: absolute;
+  top: 14px;
+  right: 14px;
+  width: 28px;
+  height: 28px;
+  border: 1.5px solid var(--border-bright);
+  border-radius: 50%;
+  background: var(--bg-elevated);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: var(--text-dim);
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 14px;
+  font-weight: 700;
+  line-height: 28px;
+  text-align: center;
+  transition: all 0.22s ease;
+}
+
+.view-card.connectors::after { content: "→"; }
+.view-card.systems::after { content: "→"; }
+
 .view-card:hover {
-  border-color: var(--accent);
-  transform: translateY(-2px);
-  box-shadow: 0 4px 20px rgba(0,0,0,0.3);
+  transform: translateY(-4px);
+  background: var(--bg-elevated);
+  box-shadow: 0 10px 30px rgba(0,0,0,0.4);
 }
 
 .view-card.connectors { border-left: 4px solid var(--connector-blue); }
 .view-card.systems { border-left: 4px solid var(--systems-green); }
+
+.view-card.connectors:hover { border-color: var(--connector-blue); border-left-color: var(--connector-blue); }
+.view-card.systems:hover { border-color: var(--systems-green); border-left-color: var(--systems-green); }
+
+.view-card.connectors:hover::after {
+  background: var(--connector-blue);
+  border-color: var(--connector-blue);
+  color: #ffffff;
+  transform: translateX(4px);
+  box-shadow: 0 0 14px rgba(31,111,235,0.6);
+}
+
+.view-card.systems:hover::after {
+  background: var(--systems-green);
+  border-color: var(--systems-green);
+  color: #ffffff;
+  transform: translateX(4px);
+  box-shadow: 0 0 14px rgba(63,185,80,0.6);
+}
 
 .view-tag {
   font-size: 10px;
@@ -186,14 +232,55 @@ body {
   color: var(--accent);
 }
 
-.view-arrow {
+.view-cta {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 10px;
   font-family: 'Oswald', sans-serif;
-  font-size: 12px;
-  color: var(--accent);
-  letter-spacing: 0.1em;
+  font-size: 14px;
+  font-weight: 700;
+  letter-spacing: 0.12em;
   text-transform: uppercase;
-  font-weight: 600;
-  margin-top: 4px;
+  padding: 14px 20px;
+  border: 2px solid;
+  margin-top: 8px;
+  transition: all 0.22s ease;
+  text-align: center;
+}
+
+.view-card.connectors .view-cta {
+  background: rgba(31, 111, 235, 0.14);
+  border-color: var(--connector-blue);
+  color: #79b8ff;
+}
+
+.view-card.systems .view-cta {
+  background: rgba(63, 185, 80, 0.14);
+  border-color: var(--systems-green);
+  color: #7ee787;
+}
+
+.view-card.connectors:hover .view-cta {
+  background: var(--connector-blue);
+  color: #ffffff;
+  box-shadow: 0 4px 16px rgba(31, 111, 235, 0.5);
+}
+
+.view-card.systems:hover .view-cta {
+  background: var(--systems-green);
+  color: #ffffff;
+  box-shadow: 0 4px 16px rgba(63, 185, 80, 0.5);
+}
+
+.view-cta-arrow {
+  font-size: 18px;
+  font-weight: 700;
+  transition: transform 0.22s ease;
+}
+
+.view-card:hover .view-cta-arrow {
+  transform: translateX(5px);
 }
 
 .bench-block {
@@ -296,7 +383,10 @@ body {
         <li>Verification tracking with localStorage</li>
         <li>Filter by category (power · ground · CAN · sensors · injectors · coils)</li>
       </ul>
-      <div class="view-arrow">Open connector view →</div>
+      <div class="view-cta">
+        Open Connector View
+        <span class="view-cta-arrow">→</span>
+      </div>
     </a>
 
     <a class="view-card systems" href="systems.html">
@@ -311,7 +401,10 @@ body {
         <li>Bench-flash minimum wiring with power-supply settings</li>
         <li>OBDII pinout table for HP Tuners hookup</li>
       </ul>
-      <div class="view-arrow">Open systems view →</div>
+      <div class="view-cta">
+        Open Systems View
+        <span class="view-cta-arrow">→</span>
+      </div>
     </a>
 
   </div>
