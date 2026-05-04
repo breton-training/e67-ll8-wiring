@@ -199,39 +199,57 @@ body {
 }
 
 .bulk-toggle-btn {
-  background: var(--bg-card);
-  border: 1px solid var(--border-bright);
-  color: var(--text-dim);
-  font-family: 'JetBrains Mono', monospace;
-  font-size: 11px;
-  font-weight: 600;
-  padding: 7px 12px;
+  border: 2px solid;
+  font-family: 'Oswald', sans-serif;
+  font-size: 13px;
+  font-weight: 700;
+  padding: 10px 20px;
   cursor: pointer;
-  letter-spacing: 0.06em;
+  letter-spacing: 0.1em;
   text-transform: uppercase;
-  transition: all 0.15s;
+  transition: all 0.18s ease;
   display: inline-flex;
   align-items: center;
-  gap: 7px;
+  gap: 10px;
   white-space: nowrap;
 }
 
-.bulk-toggle-btn:hover {
-  border-color: var(--accent);
-  color: var(--accent-bright);
-  background: var(--bg-hover);
+.bulk-toggle-btn.btn-open {
+  background: rgba(46, 204, 113, 0.12);
+  border-color: #2ecc71;
+  color: #2ecc71;
+}
+.bulk-toggle-btn.btn-open:hover {
+  background: #27ae60;
+  color: #ffffff;
+  transform: translateY(-1px);
+  box-shadow: 0 4px 14px rgba(39, 174, 96, 0.45);
 }
 
+.bulk-toggle-btn.btn-close {
+  background: rgba(231, 76, 60, 0.12);
+  border-color: #e74c3c;
+  color: #e74c3c;
+}
+.bulk-toggle-btn.btn-close:hover {
+  background: #c0392b;
+  color: #ffffff;
+  transform: translateY(-1px);
+  box-shadow: 0 4px 14px rgba(192, 57, 43, 0.45);
+}
+
+.bulk-toggle-btn:active { transform: translateY(0); }
+
 .bulk-toggle-btn .bulk-icon {
-  width: 14px;
-  height: 14px;
+  width: 20px;
+  height: 20px;
   border-radius: 50%;
-  border: 1.5px solid currentColor;
+  border: 2px solid currentColor;
   display: inline-flex;
   align-items: center;
   justify-content: center;
-  font-size: 12px;
-  font-weight: 700;
+  font-size: 16px;
+  font-weight: 900;
   line-height: 1;
 }
 
@@ -606,10 +624,10 @@ body {
   <input class="search-input" type="text" placeholder="Search by name, pin, circuit, wire color..." id="searchInput" oninput="doSearch(this.value)">
   <div class="bulk-toggle-group">
     <span class="bulk-state-readout" id="sectionStateReadout"><strong>0</strong> closed</span>
-    <button class="bulk-toggle-btn" type="button" onclick="expandAll()" title="Open all sections">
+    <button class="bulk-toggle-btn btn-open" type="button" onclick="expandAll()" title="Open all sections">
       <span class="bulk-icon">+</span>Open All
     </button>
-    <button class="bulk-toggle-btn" type="button" onclick="collapseAll()" title="Close all sections">
+    <button class="bulk-toggle-btn btn-close" type="button" onclick="collapseAll()" title="Close all sections">
       <span class="bulk-icon">−</span>Close All
     </button>
   </div>
