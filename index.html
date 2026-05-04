@@ -236,17 +236,37 @@ body {
   display: flex;
   align-items: center;
   justify-content: center;
-  gap: 10px;
+  gap: 14px;
   font-family: 'Oswald', sans-serif;
-  font-size: 14px;
+  font-size: 17px;
   font-weight: 700;
-  letter-spacing: 0.12em;
+  letter-spacing: 0.13em;
   text-transform: uppercase;
-  padding: 14px 20px;
-  border: 2px solid;
-  margin-top: 8px;
+  padding: 20px 24px;
+  border: 2.5px solid;
+  margin-top: 12px;
   transition: all 0.22s ease;
   text-align: center;
+}
+
+.view-cta-icon {
+  width: 32px;
+  height: 32px;
+  border-radius: 50%;
+  border: 2.5px solid currentColor;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 22px;
+  font-weight: 900;
+  line-height: 1;
+  flex-shrink: 0;
+  font-family: 'JetBrains Mono', monospace;
+  transition: all 0.22s ease;
+}
+
+.view-card:hover .view-cta-icon {
+  transform: scale(1.1) rotate(90deg);
 }
 
 .view-card.connectors .view-cta {
@@ -384,6 +404,7 @@ body {
         <li>Filter by category (power · ground · CAN · sensors · injectors · coils)</li>
       </ul>
       <div class="view-cta">
+        <span class="view-cta-icon">+</span>
         Open Connector View
         <span class="view-cta-arrow">→</span>
       </div>
@@ -402,6 +423,7 @@ body {
         <li>OBDII pinout table for HP Tuners hookup</li>
       </ul>
       <div class="view-cta">
+        <span class="view-cta-icon">+</span>
         Open Systems View
         <span class="view-cta-arrow">→</span>
       </div>
