@@ -263,6 +263,161 @@
     border-bottom: 1px solid var(--border);
     display: flex; align-items: center;
     justify-content: space-between; gap: 16px;
+    cursor: pointer;
+    user-select: none;
+    transition: background 0.15s;
+  }
+  .connector-header:hover { background: rgba(255,255,255,0.025); }
+
+  .connector-collapse-icon {
+    width: 32px; height: 32px;
+    border-radius: 50%;
+    background: var(--bg-elevated);
+    border: 1.5px solid var(--border-bright);
+    color: var(--accent-bright);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 0;
+    flex-shrink: 0;
+    transition: all 0.18s ease;
+    margin-left: 4px;
+  }
+  .connector-collapse-icon::before {
+    content: "−";
+    font-size: 22px;
+    font-weight: 700;
+    font-family: 'JetBrains Mono', monospace;
+    line-height: 1;
+  }
+  .connector-section.collapsed .connector-collapse-icon::before { content: "+"; }
+  .connector-section.collapsed .connector-collapse-icon {
+    background: rgba(232,160,48,0.08);
+    border-color: var(--accent-dim);
+    color: var(--accent);
+  }
+  .connector-header:hover .connector-collapse-icon {
+    border-color: var(--accent);
+    background: var(--bg-hover);
+    transform: scale(1.08);
+    box-shadow: 0 0 0 4px rgba(240,136,62,0.15);
+  }
+  @keyframes pulse-flash-conn {
+    0%   { box-shadow: 0 0 0 0 rgba(240,136,62,0.55); }
+    100% { box-shadow: 0 0 0 16px rgba(240,136,62,0); }
+  }
+  .connector-collapse-icon.flashing { animation: pulse-flash-conn 0.5s ease-out; }
+
+  .connector-section.collapsed .connector-diagram-wrap,
+  .connector-section.collapsed .pin-info-display,
+  .connector-section.collapsed .pin-grid-container { display: none; }
+  .connector-section.collapsed .connector-header { border-bottom-color: transparent; }
+  .connector-section.collapsed .connector-title { opacity: 0.7; }
+  .connector-section.collapsed .connector-stats { opacity: 0.6; }
+
+  /* Sidebar search */
+  .search-wrap { position: relative; }
+  .search-input {
+    width: 100%;
+    background: var(--bg-elevated);
+    border: 1px solid var(--border);
+    color: var(--text);
+    padding: 9px 30px 9px 32px;
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 12px;
+    outline: none;
+    transition: border-color 0.15s;
+    box-sizing: border-box;
+  }
+  .search-input:focus { border-color: var(--accent); }
+  .search-input::placeholder { color: var(--text-faded); }
+  .search-icon {
+    position: absolute;
+    left: 10px; top: 50%;
+    transform: translateY(-50%);
+    font-size: 12px;
+    color: var(--text-faded);
+    pointer-events: none;
+  }
+  .search-clear {
+    position: absolute;
+    right: 6px; top: 50%;
+    transform: translateY(-50%);
+    background: none;
+    border: none;
+    color: var(--text-faded);
+    cursor: pointer;
+    font-size: 14px;
+    padding: 4px 6px;
+    display: none;
+  }
+  .search-clear:hover { color: var(--accent-bright); }
+  .search-wrap.has-value .search-clear { display: block; }
+  .search-results-info {
+    font-size: 10px;
+    color: var(--text-faded);
+    margin-top: 8px;
+    letter-spacing: 0.06em;
+    text-transform: uppercase;
+    font-family: 'JetBrains Mono', monospace;
+    line-height: 1.5;
+  }
+  .search-results-info strong { color: var(--accent-bright); font-weight: 700; }
+  .search-results-info.no-match strong { color: #e74c3c; }
+
+  /* Open All / Close All buttons in sidebar */
+  .conn-bulk-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 6px;
+    margin-top: 10px;
+  }
+  .conn-bulk-btn {
+    background: var(--bg-elevated);
+    border: 1.5px solid;
+    font-family: 'Oswald', sans-serif;
+    font-size: 10px;
+    font-weight: 700;
+    padding: 8px 6px;
+    cursor: pointer;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+    transition: all 0.15s;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    gap: 6px;
+  }
+  .conn-bulk-btn .icn {
+    width: 14px; height: 14px;
+    border-radius: 50%;
+    border: 1.5px solid currentColor;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 11px;
+    font-weight: 900;
+    line-height: 1;
+  }
+  .conn-bulk-btn.btn-open {
+    background: rgba(46,204,113,0.10);
+    border-color: #2ecc71;
+    color: #2ecc71;
+  }
+  .conn-bulk-btn.btn-open:hover {
+    background: #27ae60;
+    color: #fff;
+    box-shadow: 0 4px 10px rgba(39,174,96,0.4);
+  }
+  .conn-bulk-btn.btn-close {
+    background: rgba(231,76,60,0.10);
+    border-color: #e74c3c;
+    color: #e74c3c;
+  }
+  .conn-bulk-btn.btn-close:hover {
+    background: #c0392b;
+    color: #fff;
+    box-shadow: 0 4px 10px rgba(192,57,43,0.4);
   }
 
   .connector-title {
@@ -724,7 +879,7 @@
     color: var(--accent);
   }
 
-  .pin.dim { opacity: 0.15; }
+  .pin.dim, .pin-empty.dim { opacity: 0.15; }
   .pin-cell.dim .pin-rect { opacity: 0.18; }
   .pin-cell.dim .pin-num-label { opacity: 0.18; }
 
@@ -796,6 +951,16 @@
     </div>
 
     <div class="sidebar-section">
+      <div class="sidebar-heading">Search Pins</div>
+      <div class="search-wrap" id="searchWrap">
+        <span class="search-icon">⌕</span>
+        <input class="search-input" type="text" id="connSearch" placeholder="pin · circuit · wire · label" oninput="doConnSearch(this.value)">
+        <button class="search-clear" type="button" onclick="clearConnSearch()" title="Clear search">×</button>
+      </div>
+      <div class="search-results-info" id="searchResultsInfo"></div>
+    </div>
+
+    <div class="sidebar-section">
       <div class="sidebar-heading">Jump to Connector</div>
       <div class="nav-jumps">
         <button class="nav-btn" data-jump="section-x1">
@@ -812,6 +977,14 @@
           X3 / J3
           <span class="nav-btn-tag nav-tag-grey">GREY 73</span>
           <span class="nav-btn-stats">22/73</span>
+        </button>
+      </div>
+      <div class="conn-bulk-grid">
+        <button class="conn-bulk-btn btn-open" type="button" onclick="expandAllConnectors()" title="Open all connectors">
+          <span class="icn">+</span>Open All
+        </button>
+        <button class="conn-bulk-btn btn-close" type="button" onclick="collapseAllConnectors()" title="Close all connectors">
+          <span class="icn">−</span>Close All
         </button>
       </div>
     </div>
@@ -887,12 +1060,13 @@
   <main class="main">
 
     <section class="connector-section" id="section-x1">
-      <div class="connector-header">
+      <div class="connector-header" onclick="toggleConnectorSection(this)">
         <div class="connector-title">X1 / J1<span class="connector-color-tag tag-blue">BLUE — 56 PIN</span></div>
         <div class="connector-stats">
           <div><strong>30</strong> populated / 56 cavity</div>
           <div id="progress-x1" class="connector-progress"></div>
         </div>
+        <div class="connector-collapse-icon"></div>
       </div>
       <div class="connector-diagram-wrap">
         <div class="diagram-orientation-note">Installed orientation (back-of-connector view, harness side) — 4 columns × 14 rows — Pin 1 bottom-left, Pin 56 top-right. Pin number markers cast on bottom edge.</div>
@@ -903,12 +1077,13 @@
     </section>
 
     <section class="connector-section" id="section-x2">
-      <div class="connector-header">
+      <div class="connector-header" onclick="toggleConnectorSection(this)">
         <div class="connector-title">X2 / J2<span class="connector-color-tag tag-black">BLACK — 73 PIN</span></div>
         <div class="connector-stats">
           <div><strong>43</strong> populated / 73 cavity</div>
           <div id="progress-x2" class="connector-progress"></div>
         </div>
+        <div class="connector-collapse-icon"></div>
       </div>
       <div class="connector-diagram-wrap">
         <div class="diagram-orientation-note">Installed orientation (back-of-connector view) — 2+2 column structure: short side (left) has 2 columns of 16 pins (1-16, 17-32). Long side (right) has 2 columns of 20 pins (33-52, 53-72). Pin 73 in special position above short side, larger cavity (heavy gauge ground).</div>
@@ -919,12 +1094,13 @@
     </section>
 
     <section class="connector-section" id="section-x3">
-      <div class="connector-header">
+      <div class="connector-header" onclick="toggleConnectorSection(this)">
         <div class="connector-title">X3 / J3<span class="connector-color-tag tag-grey">GREY — 73 PIN</span></div>
         <div class="connector-stats">
           <div><strong>22</strong> populated / 73 cavity</div>
           <div id="progress-x3" class="connector-progress"></div>
         </div>
+        <div class="connector-collapse-icon"></div>
       </div>
       <div class="connector-diagram-wrap">
         <div class="diagram-orientation-note">Same physical layout as X2. Far fewer populated pins on the 4.2L (most 5.3L-only AFM and bank 2 pins are unused).</div>
@@ -1452,22 +1628,165 @@ document.querySelectorAll('.pin-cell').forEach(cell => {
   });
 });
 
+// Unified filter + search state
+let currentFilter = 'all';
+let currentSearch = '';
+
+function pinMatchesSearch(connKey, pin, query) {
+  if (!query) return true;
+  const d = PIN_DATA[connKey][pin];
+  // Empty cavities still match by pin number / connector tag
+  const tagForms = [String(pin), connKey + '-' + pin, connKey + pin, connKey].join(' ').toLowerCase();
+  if (!d) return tagForms.includes(query);
+  const haystack = [tagForms, d.wire, d.gauge, d.circuit, d.label, d.cat]
+    .filter(Boolean).join(' ').toLowerCase();
+  return haystack.includes(query);
+}
+
+function applyFilters() {
+  const filter = currentFilter;
+  const query = currentSearch.toLowerCase().trim();
+  const sectionMatches = { x1: 0, x2: 0, x3: 0 };
+  let totalMatches = 0;
+
+  document.querySelectorAll('.pin').forEach(card => {
+    const conn = card.dataset.conn;
+    const pinNum = parseInt(card.dataset.pin);
+    const cat = card.dataset.cat;
+    let visible = true;
+    if (filter !== 'all' && cat !== filter) visible = false;
+    if (query && !pinMatchesSearch(conn, pinNum, query)) visible = false;
+    card.classList.toggle('dim', !visible);
+    if (visible && query) { sectionMatches[conn]++; totalMatches++; }
+  });
+
+  // Empty placeholder cards: dim during any active filter or search
+  document.querySelectorAll('.pin-empty').forEach(el => {
+    el.classList.toggle('dim', query !== '' || filter !== 'all');
+  });
+
+  document.querySelectorAll('.pin-cell').forEach(cell => {
+    const conn = cell.dataset.conn;
+    const pinNum = parseInt(cell.dataset.pin);
+    const cat = cell.dataset.cat;
+    let visible = true;
+    if (filter !== 'all' && cat !== filter) visible = false;
+    if (query && !pinMatchesSearch(conn, pinNum, query)) visible = false;
+    cell.classList.toggle('dim', !visible);
+  });
+
+  // While search is active, force-expand sections that contain matches.
+  // When search clears, restore the user's saved collapsed state.
+  if (query) {
+    for (const conn of ['x1', 'x2', 'x3']) {
+      const sec = document.getElementById('section-' + conn);
+      if (sec && sectionMatches[conn] > 0) sec.classList.remove('collapsed');
+    }
+  } else {
+    const saved = loadCollapsedState();
+    for (const conn of ['x1', 'x2', 'x3']) {
+      const sec = document.getElementById('section-' + conn);
+      if (!sec) continue;
+      if (saved['section-' + conn]) sec.classList.add('collapsed');
+      else sec.classList.remove('collapsed');
+    }
+  }
+
+  const info = document.getElementById('searchResultsInfo');
+  if (info) {
+    if (!query) {
+      info.textContent = '';
+      info.className = 'search-results-info';
+    } else if (totalMatches === 0) {
+      info.innerHTML = '<strong>No matches</strong>';
+      info.className = 'search-results-info no-match';
+    } else {
+      const sections = Object.values(sectionMatches).filter(n => n > 0).length;
+      info.innerHTML = '<strong>' + totalMatches + '</strong> pin' + (totalMatches === 1 ? '' : 's') +
+        ' in <strong>' + sections + '</strong> connector' + (sections === 1 ? '' : 's');
+      info.className = 'search-results-info';
+    }
+  }
+
+  const wrap = document.getElementById('searchWrap');
+  if (wrap) wrap.classList.toggle('has-value', !!query);
+}
+
+function doConnSearch(value) {
+  currentSearch = value;
+  applyFilters();
+}
+
+function clearConnSearch() {
+  currentSearch = '';
+  const input = document.getElementById('connSearch');
+  if (input) input.value = '';
+  applyFilters();
+}
+
+// Per-connector collapse state, persisted in localStorage
+const COLLAPSE_KEY = 'e67_conn_collapsed_v1';
+function loadCollapsedState() {
+  try { return JSON.parse(localStorage.getItem(COLLAPSE_KEY)) || {}; }
+  catch (e) { return {}; }
+}
+function saveCollapsedState(s) {
+  localStorage.setItem(COLLAPSE_KEY, JSON.stringify(s));
+}
+
+function flashConnectorIcon(icon) {
+  if (!icon) return;
+  icon.classList.remove('flashing');
+  void icon.offsetWidth;
+  icon.classList.add('flashing');
+}
+
+function toggleConnectorSection(header) {
+  const section = header.parentElement;
+  section.classList.toggle('collapsed');
+  flashConnectorIcon(header.querySelector('.connector-collapse-icon'));
+  const id = section.id;
+  const state = loadCollapsedState();
+  if (section.classList.contains('collapsed')) state[id] = true;
+  else delete state[id];
+  saveCollapsedState(state);
+}
+
+function expandAllConnectors() {
+  document.querySelectorAll('.connector-section').forEach(sec => sec.classList.remove('collapsed'));
+  document.querySelectorAll('.connector-collapse-icon').forEach(flashConnectorIcon);
+  saveCollapsedState({});
+}
+
+function collapseAllConnectors() {
+  const state = {};
+  document.querySelectorAll('.connector-section').forEach(sec => {
+    sec.classList.add('collapsed');
+    state[sec.id] = true;
+  });
+  document.querySelectorAll('.connector-collapse-icon').forEach(flashConnectorIcon);
+  saveCollapsedState(state);
+}
+
+// Restore saved collapsed state on initial render
+(function restoreCollapsedState() {
+  const saved = loadCollapsedState();
+  for (const id in saved) {
+    if (saved[id]) {
+      const sec = document.getElementById(id);
+      if (sec) sec.classList.add('collapsed');
+    }
+  }
+})();
+
+// Filter buttons drive currentFilter and re-apply the unified filter
 const filterBtns = document.querySelectorAll('.filter-btn');
 filterBtns.forEach(btn => {
   btn.addEventListener('click', () => {
     filterBtns.forEach(b => b.classList.remove('active'));
     btn.classList.add('active');
-    const filter = btn.dataset.filter;
-
-    document.querySelectorAll('.pin').forEach(pin => {
-      if (filter === 'all') pin.classList.remove('dim');
-      else pin.classList.toggle('dim', pin.dataset.cat !== filter);
-    });
-
-    document.querySelectorAll('.pin-cell').forEach(pin => {
-      if (filter === 'all') pin.classList.remove('dim');
-      else pin.classList.toggle('dim', pin.dataset.cat !== filter);
-    });
+    currentFilter = btn.dataset.filter;
+    applyFilters();
   });
 });
 
