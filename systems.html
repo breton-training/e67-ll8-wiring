@@ -159,14 +159,20 @@ body {
 .meta-item { display: flex; align-items: center; gap: 6px; }
 .meta-dot { width: 6px; height: 6px; background: var(--accent); border-radius: 50%; }
 
+/* Sticky header + search bar — locked at top during scroll */
+.sticky-top {
+  position: sticky;
+  top: 0;
+  z-index: 100;
+  background: var(--bg);
+  box-shadow: 0 2px 12px rgba(0,0,0,0.4);
+}
+
 /* SEARCH */
 .search-bar {
   padding: 16px 40px;
   background: var(--bg-elevated);
   border-bottom: 1px solid var(--border);
-  position: sticky;
-  top: 0;
-  z-index: 100;
   display: flex;
   align-items: center;
   gap: 16px;
@@ -609,27 +615,29 @@ body {
 <!-- MAIN -->
 <div class="main">
 
-<div class="page-header">
-  <h1>E67 LL8 4.2L — Complete Wiring Reference</h1>
-  <div class="meta">
-    <div class="meta-item"><div class="meta-dot"></div>ECM P/N: 12618163</div>
-    <div class="meta-item"><div class="meta-dot"></div>Service: 12607096</div>
-    <div class="meta-item"><div class="meta-dot"></div>Broadcast: YRH</div>
-    <div class="meta-item"><div class="meta-dot"></div>App: 2008-2009 Trailblazer LL8 4.2L I6</div>
-    <div class="meta-item"><div class="meta-dot"></div>Compiled: 2026-04-29</div>
+<div class="sticky-top">
+  <div class="page-header">
+    <h1>E67 LL8 4.2L — Complete Wiring Reference</h1>
+    <div class="meta">
+      <div class="meta-item"><div class="meta-dot"></div>ECM P/N: 12618163</div>
+      <div class="meta-item"><div class="meta-dot"></div>Service: 12607096</div>
+      <div class="meta-item"><div class="meta-dot"></div>Broadcast: YRH</div>
+      <div class="meta-item"><div class="meta-dot"></div>App: 2008-2009 Trailblazer LL8 4.2L I6</div>
+      <div class="meta-item"><div class="meta-dot"></div>Compiled: 2026-04-29</div>
+    </div>
   </div>
-</div>
 
-<div class="search-bar">
-  <input class="search-input" type="text" placeholder="Search by name, pin, circuit, wire color..." id="searchInput" oninput="doSearch(this.value)">
-  <div class="bulk-toggle-group">
-    <span class="bulk-state-readout" id="sectionStateReadout"><strong>0</strong> closed</span>
-    <button class="bulk-toggle-btn btn-open" type="button" onclick="expandAll()" title="Open all sections">
-      <span class="bulk-icon">+</span>Open All
-    </button>
-    <button class="bulk-toggle-btn btn-close" type="button" onclick="collapseAll()" title="Close all sections">
-      <span class="bulk-icon">−</span>Close All
-    </button>
+  <div class="search-bar">
+    <input class="search-input" type="text" placeholder="Search by name, pin, circuit, wire color..." id="searchInput" oninput="doSearch(this.value)">
+    <div class="bulk-toggle-group">
+      <span class="bulk-state-readout" id="sectionStateReadout"><strong>0</strong> closed</span>
+      <button class="bulk-toggle-btn btn-open" type="button" onclick="expandAll()" title="Open all sections">
+        <span class="bulk-icon">+</span>Open All
+      </button>
+      <button class="bulk-toggle-btn btn-close" type="button" onclick="collapseAll()" title="Close all sections">
+        <span class="bulk-icon">−</span>Close All
+      </button>
+    </div>
   </div>
 </div>
 
