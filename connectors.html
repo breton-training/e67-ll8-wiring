@@ -880,6 +880,20 @@
   }
 
   .pin.dim, .pin-empty.dim { opacity: 0.15; }
+
+  /* Search match highlight — distinct from click-target .highlighted (different glow color) */
+  .pin.search-match {
+    border-color: #58a6ff;
+    box-shadow: 0 0 0 2px #58a6ff, 0 0 14px rgba(88,166,255,0.45);
+    z-index: 2;
+  }
+  .pin-cell.search-match .pin-rect {
+    stroke: #58a6ff;
+    stroke-width: 2.5;
+  }
+  .pin-cell.search-match .pin-status-dot {
+    filter: drop-shadow(0 0 3px #58a6ff);
+  }
   .pin-cell.dim .pin-rect { opacity: 0.18; }
   .pin-cell.dim .pin-num-label { opacity: 0.18; }
 
@@ -1654,9 +1668,14 @@ function applyFilters() {
     const pinNum = parseInt(card.dataset.pin);
     const cat = card.dataset.cat;
     let visible = true;
+    let isSearchMatch = false;
     if (filter !== 'all' && cat !== filter) visible = false;
-    if (query && !pinMatchesSearch(conn, pinNum, query)) visible = false;
+    if (query) {
+      if (!pinMatchesSearch(conn, pinNum, query)) visible = false;
+      else if (visible) isSearchMatch = true;
+    }
     card.classList.toggle('dim', !visible);
+    card.classList.toggle('search-match', isSearchMatch);
     if (visible && query) { sectionMatches[conn]++; totalMatches++; }
   });
 
@@ -1670,17 +1689,24 @@ function applyFilters() {
     const pinNum = parseInt(cell.dataset.pin);
     const cat = cell.dataset.cat;
     let visible = true;
+    let isSearchMatch = false;
     if (filter !== 'all' && cat !== filter) visible = false;
-    if (query && !pinMatchesSearch(conn, pinNum, query)) visible = false;
+    if (query) {
+      if (!pinMatchesSearch(conn, pinNum, query)) visible = false;
+      else if (visible) isSearchMatch = true;
+    }
     cell.classList.toggle('dim', !visible);
+    cell.classList.toggle('search-match', isSearchMatch);
   });
 
-  // While search is active, force-expand sections that contain matches.
+  // Search isolates: connectors WITH matches expand, others collapse.
   // When search clears, restore the user's saved collapsed state.
   if (query) {
     for (const conn of ['x1', 'x2', 'x3']) {
       const sec = document.getElementById('section-' + conn);
-      if (sec && sectionMatches[conn] > 0) sec.classList.remove('collapsed');
+      if (!sec) continue;
+      if (sectionMatches[conn] > 0) sec.classList.remove('collapsed');
+      else sec.classList.add('collapsed');
     }
   } else {
     const saved = loadCollapsedState();
