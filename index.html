@@ -349,6 +349,55 @@ body {
   box-shadow: 0 0 14px rgba(232,160,48,0.6);
 }
 
+/* "More below" scroll cue under the hero */
+.scroll-cue {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 10px;
+  margin: -10px 0 28px;
+  padding: 10px 16px;
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 11px;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  color: var(--text-faded);
+  cursor: pointer;
+  transition: color 0.18s ease;
+  text-decoration: none;
+}
+.scroll-cue:hover { color: var(--accent-bright); }
+.scroll-cue .chev {
+  display: inline-block;
+  font-size: 14px;
+  animation: scroll-bounce 1.6s ease-in-out infinite;
+}
+@keyframes scroll-bounce {
+  0%, 100% { transform: translateY(0); }
+  50%      { transform: translateY(4px); }
+}
+
+/* Reference-views section header */
+.section-heading {
+  font-family: 'Oswald', sans-serif;
+  font-size: 20px;
+  font-weight: 700;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  color: var(--text);
+  margin-bottom: 6px;
+  padding-top: 12px;
+  border-top: 1px solid var(--border);
+  padding-top: 24px;
+}
+.section-heading-sub {
+  font-size: 12px;
+  color: var(--text-faded);
+  letter-spacing: 0.08em;
+  margin-bottom: 18px;
+  font-family: 'JetBrains Mono', monospace;
+}
+
 .hero-tag {
   font-family: 'Oswald', sans-serif;
   font-size: 11px;
@@ -527,8 +576,17 @@ body {
     </div>
   </a>
 
+  <a class="scroll-cue" href="#reference-views">
+    <span class="chev">▾</span>
+    Or browse the reference views below
+    <span class="chev">▾</span>
+  </a>
+
+  <h2 class="section-heading" id="reference-views">Reference Views</h2>
+  <div class="section-heading-sub">Keep these open in tabs while you wire — they back up the tutorial with the full pin data.</div>
+
   <p class="intro">
-    Two reference views support the tutorial — keep them open in tabs while you wire. <strong>Connector view</strong> for harness-side work ("what's in cavity 47?"); <strong>systems view</strong> for the full bench-flash detail and circuit-by-circuit explanation. Pin facts are sourced from <code>data/pins.js</code> and verified against physical X1, X2, X3 connectors pulled from a 2008 Trailblazer donor.
+    <strong>Connector view</strong> answers harness-side questions ("what's in cavity 47?"). <strong>Systems view</strong> goes circuit-by-circuit and holds the full bench-flash detail. Pin facts are sourced from <code>data/pins.js</code> and verified against physical X1, X2, X3 connectors pulled from a 2008 Trailblazer donor.
   </p>
 
   <div class="cards">
