@@ -850,18 +850,38 @@
   .footer-notes {
     background: var(--bg-panel);
     border: 1px solid var(--border);
-    padding: 24px;
     margin-top: 24px;
   }
+
+  .footer-notes-header {
+    padding: 18px 24px;
+    display: flex;
+    align-items: center;
+    gap: 16px;
+    cursor: pointer;
+    user-select: none;
+    transition: background 0.15s;
+    border-bottom: 1px solid var(--border);
+  }
+  .footer-notes-header:hover { background: rgba(255,255,255,0.025); }
+  .footer-notes.collapsed .footer-notes-header { border-bottom-color: transparent; }
 
   .footer-notes h3 {
     font-family: 'Oswald', sans-serif;
     font-size: 16px;
     letter-spacing: 0.1em;
     text-transform: uppercase;
-    margin-bottom: 12px;
     color: var(--accent-bright);
+    flex: 1;
+    margin: 0;
   }
+
+  .footer-notes.collapsed h3 { opacity: 0.7; }
+
+  .footer-notes-body {
+    padding: 18px 24px 22px;
+  }
+  .footer-notes.collapsed .footer-notes-body { display: none; }
 
   .footer-notes ul {
     list-style: none;
@@ -1124,18 +1144,23 @@
       <div class="pin-grid-container"><div class="pin-grid-73" id="grid-x3"></div></div>
     </section>
 
-    <div class="footer-notes">
-      <h3>Build Notes & Anomalies</h3>
-      <ul>
-        <li>Two pins both labeled "Starter Enable Relay Control": <strong>X1-56 (YE/BK, 625)</strong> and <strong>X2-43 (YE, 6259, 4.2L)</strong>. Verify primary against factory wiring diagram before final connection.</li>
-        <li>Two pins both labeled "IC 4 Control" with circuit 2124: <strong>X2-18 (D-GN/WH, 0.5mm²)</strong> and <strong>X2-34 (D-GN/WH, 0.35mm²)</strong>. Same circuit on two pins is unusual — verify before wiring coils.</li>
-        <li>Wire gauge guide: 0.35mm² ≈ 22 AWG, 0.5mm² ≈ 20 AWG, 1.0mm² ≈ 18 AWG (primary ground X2-73 is heavy gauge).</li>
-        <li>Color codes: BK=Black, BN=Brown, RD=Red, OG=Orange, YE=Yellow, GN=Green, BU=Blue, PU=Purple, GY=Gray, WH=White, PK=Pink, TN=Tan. Prefix D-=Dark, L-=Light.</li>
-        <li>Two-tone wire format: BASE/TRACER. The first color is the insulation jacket, the second is the stripe.</li>
-        <li>4.2L tag indicates pin function is specific to the Atlas I6 calibration. Same physical pin position may have different function on 5.3L variant.</li>
-        <li>For bench flash minimum: power = X1-20 (B+); ignition = X1-18, X1-19, X2-13 tied; ground = X2-73 + low refs; CAN = X3-33 (low) + X3-53 (high).</li>
-        <li><strong>Connector layouts verified 2026-04-28</strong> against physical X1, X2, X3 connectors. X1: 4 cols × 14 rows uniform. X2/X3: 2+2 column structure — short side (left) 2 columns of 16 pins, long side (right) 2 columns of 20 pins, plus pin 73 in special larger position above short side.</li>
-      </ul>
+    <div class="footer-notes" id="footer-notes">
+      <div class="footer-notes-header" onclick="toggleFooterNotes(this)">
+        <h3>Build Notes & Anomalies</h3>
+        <div class="connector-collapse-icon"></div>
+      </div>
+      <div class="footer-notes-body">
+        <ul>
+          <li>Two pins both labeled "Starter Enable Relay Control": <strong>X1-56 (YE/BK, 625)</strong> and <strong>X2-43 (YE, 6259, 4.2L)</strong>. Verify primary against factory wiring diagram before final connection.</li>
+          <li>Two pins both labeled "IC 4 Control" with circuit 2124: <strong>X2-18 (D-GN/WH, 0.5mm²)</strong> and <strong>X2-34 (D-GN/WH, 0.35mm²)</strong>. Same circuit on two pins is unusual — verify before wiring coils.</li>
+          <li>Wire gauge guide: 0.35mm² ≈ 22 AWG, 0.5mm² ≈ 20 AWG, 1.0mm² ≈ 18 AWG (primary ground X2-73 is heavy gauge).</li>
+          <li>Color codes: BK=Black, BN=Brown, RD=Red, OG=Orange, YE=Yellow, GN=Green, BU=Blue, PU=Purple, GY=Gray, WH=White, PK=Pink, TN=Tan. Prefix D-=Dark, L-=Light.</li>
+          <li>Two-tone wire format: BASE/TRACER. The first color is the insulation jacket, the second is the stripe.</li>
+          <li>4.2L tag indicates pin function is specific to the Atlas I6 calibration. Same physical pin position may have different function on 5.3L variant.</li>
+          <li>For bench flash minimum: power = X1-20 (B+); ignition = X1-18, X1-19, X2-13 tied; ground = X2-73 + low refs; CAN = X3-33 (low) + X3-53 (high).</li>
+          <li><strong>Connector layouts verified 2026-04-28</strong> against physical X1, X2, X3 connectors. X1: 4 cols × 14 rows uniform. X2/X3: 2+2 column structure — short side (left) 2 columns of 16 pins, long side (right) 2 columns of 20 pins, plus pin 73 in special larger position above short side.</li>
+        </ul>
+      </div>
     </div>
 
   </main>
@@ -1771,6 +1796,16 @@ function toggleConnectorSection(header) {
   const state = loadCollapsedState();
   if (section.classList.contains('collapsed')) state[id] = true;
   else delete state[id];
+  saveCollapsedState(state);
+}
+
+function toggleFooterNotes(header) {
+  const wrap = header.parentElement;
+  wrap.classList.toggle('collapsed');
+  flashConnectorIcon(header.querySelector('.connector-collapse-icon'));
+  const state = loadCollapsedState();
+  if (wrap.classList.contains('collapsed')) state['footer-notes'] = true;
+  else delete state['footer-notes'];
   saveCollapsedState(state);
 }
 
