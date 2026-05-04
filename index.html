@@ -319,6 +319,36 @@ body {
   box-shadow: 0 10px 30px rgba(0,0,0,0.4);
 }
 
+.hero-tutorial::after {
+  content: "→";
+  position: absolute;
+  top: 14px;
+  right: 14px;
+  width: 28px;
+  height: 28px;
+  border: 1.5px solid var(--border-bright);
+  border-radius: 50%;
+  background: var(--bg-elevated);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: var(--text-dim);
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 14px;
+  font-weight: 700;
+  line-height: 28px;
+  text-align: center;
+  transition: all 0.22s ease;
+}
+
+.hero-tutorial:hover::after {
+  background: var(--accent);
+  border-color: var(--accent);
+  color: #ffffff;
+  transform: translateX(4px);
+  box-shadow: 0 0 14px rgba(232,160,48,0.6);
+}
+
 .hero-tag {
   font-family: 'Oswald', sans-serif;
   font-size: 11px;
