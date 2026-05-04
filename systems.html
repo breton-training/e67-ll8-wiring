@@ -167,10 +167,15 @@ body {
   position: sticky;
   top: 0;
   z-index: 100;
+  display: flex;
+  align-items: center;
+  gap: 16px;
+  flex-wrap: wrap;
 }
 
 .search-input {
-  width: 100%;
+  flex: 1;
+  min-width: 240px;
   max-width: 500px;
   background: var(--bg-card);
   border: 1px solid var(--border-bright);
@@ -184,6 +189,63 @@ body {
 
 .search-input:focus { border-color: var(--accent); }
 .search-input::placeholder { color: var(--text-faded); }
+
+/* Bulk expand / collapse */
+.bulk-toggle-group {
+  display: flex;
+  gap: 8px;
+  align-items: center;
+  margin-left: auto;
+}
+
+.bulk-toggle-btn {
+  background: var(--bg-card);
+  border: 1px solid var(--border-bright);
+  color: var(--text-dim);
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 11px;
+  font-weight: 600;
+  padding: 7px 12px;
+  cursor: pointer;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+  transition: all 0.15s;
+  display: inline-flex;
+  align-items: center;
+  gap: 7px;
+  white-space: nowrap;
+}
+
+.bulk-toggle-btn:hover {
+  border-color: var(--accent);
+  color: var(--accent-bright);
+  background: var(--bg-hover);
+}
+
+.bulk-toggle-btn .bulk-icon {
+  width: 14px;
+  height: 14px;
+  border-radius: 50%;
+  border: 1.5px solid currentColor;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 12px;
+  font-weight: 700;
+  line-height: 1;
+}
+
+.bulk-state-readout {
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 10px;
+  color: var(--text-faded);
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  padding-right: 4px;
+  border-right: 1px solid var(--border);
+  margin-right: 4px;
+}
+.bulk-state-readout strong { color: var(--accent-bright); font-weight: 700; }
 
 /* SYSTEM SECTIONS */
 .system-section {
@@ -226,12 +288,55 @@ body {
 
 .collapse-icon {
   margin-left: auto;
-  color: var(--text-faded);
-  font-size: 18px;
-  transition: transform 0.2s;
+  width: 30px;
+  height: 30px;
+  border-radius: 50%;
+  background: var(--bg-elevated);
+  border: 1.5px solid var(--border-bright);
+  color: var(--accent-bright);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 0;
+  flex-shrink: 0;
+  transition: all 0.18s ease;
+  position: relative;
 }
 
-.collapsed .collapse-icon { transform: rotate(-90deg); }
+.collapse-icon::before {
+  content: "−";
+  font-size: 20px;
+  font-weight: 700;
+  font-family: 'JetBrains Mono', monospace;
+  line-height: 1;
+}
+
+.system-header:hover .collapse-icon {
+  border-color: var(--accent);
+  background: var(--bg-hover);
+  transform: scale(1.08);
+  box-shadow: 0 0 0 3px rgba(232,160,48,0.12);
+}
+
+.collapsed .collapse-icon {
+  background: rgba(232,160,48,0.08);
+  border-color: var(--accent-dim);
+  color: var(--accent);
+}
+.collapsed .collapse-icon::before { content: "+"; }
+
+.collapsed .system-title { opacity: 0.65; transition: opacity 0.15s; }
+.collapsed .system-subtitle { opacity: 0.55; transition: opacity 0.15s; }
+
+.collapsed .system-header { background: rgba(0,0,0,0.15); }
+
+/* Brief flash on toggle so the user sees the action register */
+@keyframes pulse-flash {
+  0% { box-shadow: 0 0 0 0 rgba(232,160,48,0.5); }
+  100% { box-shadow: 0 0 0 14px rgba(232,160,48,0); }
+}
+.collapse-icon.flashing { animation: pulse-flash 0.45s ease-out; }
+
 .collapsed .system-body { display: none; }
 
 .system-body { padding: 0 40px 24px; }
@@ -497,6 +602,15 @@ body {
 
 <div class="search-bar">
   <input class="search-input" type="text" placeholder="Search by name, pin, circuit, wire color..." id="searchInput" oninput="doSearch(this.value)">
+  <div class="bulk-toggle-group">
+    <span class="bulk-state-readout" id="sectionStateReadout"><strong>0</strong> closed</span>
+    <button class="bulk-toggle-btn" type="button" onclick="expandAll()" title="Open all sections">
+      <span class="bulk-icon">+</span>Open All
+    </button>
+    <button class="bulk-toggle-btn" type="button" onclick="collapseAll()" title="Close all sections">
+      <span class="bulk-icon">−</span>Close All
+    </button>
+  </div>
 </div>
 
 <!-- ═══════════════════════════════════════════════ BENCH FLASH -->
@@ -1843,8 +1957,48 @@ body {
 
 <script>
 function toggleSection(header) {
-  header.parentElement.classList.toggle('collapsed');
+  const section = header.parentElement;
+  section.classList.toggle('collapsed');
+  const icon = header.querySelector('.collapse-icon');
+  if (icon) {
+    icon.classList.remove('flashing');
+    void icon.offsetWidth; // force reflow so the animation can re-trigger
+    icon.classList.add('flashing');
+  }
+  updateSectionStateReadout();
 }
+
+function expandAll() {
+  document.querySelectorAll('.system-section.collapsed').forEach(sec => sec.classList.remove('collapsed'));
+  document.querySelectorAll('.collapse-icon').forEach(icon => {
+    icon.classList.remove('flashing');
+    void icon.offsetWidth;
+    icon.classList.add('flashing');
+  });
+  updateSectionStateReadout();
+}
+
+function collapseAll() {
+  document.querySelectorAll('.system-section').forEach(sec => sec.classList.add('collapsed'));
+  document.querySelectorAll('.collapse-icon').forEach(icon => {
+    icon.classList.remove('flashing');
+    void icon.offsetWidth;
+    icon.classList.add('flashing');
+  });
+  updateSectionStateReadout();
+}
+
+function updateSectionStateReadout() {
+  const total = document.querySelectorAll('.system-section').length;
+  const closed = document.querySelectorAll('.system-section.collapsed').length;
+  const el = document.getElementById('sectionStateReadout');
+  if (!el) return;
+  if (closed === 0) el.innerHTML = '<strong>all</strong> open';
+  else if (closed === total) el.innerHTML = '<strong>all</strong> closed';
+  else el.innerHTML = '<strong>' + closed + '</strong>/' + total + ' closed';
+}
+
+document.addEventListener('DOMContentLoaded', updateSectionStateReadout);
 
 function doSearch(val) {
   const q = val.toLowerCase().trim();
