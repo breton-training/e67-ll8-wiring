@@ -633,8 +633,17 @@ body {
     </div>
 
     <div class="bench-note warn">
-      <strong>OBDII terminator — 120 Ω across pins 6 ↔ 14 at the OBDII end only.</strong>
-      Donor 2008 Trailblazer pigtail measured <code>121 Ω</code> (within 1% — taped union between Pin 6 and Pin 14). No external resistor needed for this donor, but always meter-verify on a different one. With ECM connected expect ~60 Ω (two 120 Ω in parallel).
+      <strong>OBDII CAN routing — two separate wires, terminator at OBDII end only.</strong>
+      Run X3-53 and X3-33 as <strong>two independent wires</strong> all the way to OBDII Pin 6 and Pin 14 respectively. <strong>Do <em>not</em> bridge or join them at the ECM side.</strong> The 120 Ω terminator sits across Pin 6 ↔ Pin 14 <em>at the OBDII connector only</em>.
+      <div style="margin-top:10px; padding:10px 12px; background:rgba(63,185,80,0.08); border-left:3px solid #3fb950;">
+        <strong style="color:#3fb950;">✓ Factory donor pigtail (2008 Trailblazer)</strong><br>
+        120 Ω terminator already built in — taped union between Pin 6 and Pin 14 inside the harness. This donor measured <code>121 Ω</code> (within 1% of nominal). <strong>No external resistor needed.</strong> Confirm with a meter before assuming on a different vehicle's donor pigtail.
+      </div>
+      <div style="margin-top:8px; padding:10px 12px; background:rgba(231,76,60,0.08); border-left:3px solid #e74c3c;">
+        <strong style="color:#e74c3c;">⚠ Aftermarket / new OBDII socket + pigtail</strong><br>
+        <strong>No built-in terminator.</strong> You <strong>must install an external 120 Ω resistor across OBDII Pin 6 ↔ Pin 14</strong> or HP Tuners will report "no module response." Build with 0.5 W 1% resistors — for example <code>10 + 10 + 100 Ω in series = 120 Ω</code> exactly. Solder inline on Pin 6 or Pin 14 wire at the OBDII connector end and insulate.
+      </div>
+      <div style="margin-top:10px; font-size:11px; color:var(--text-faded);">Verify with meter before powering the ECM. Expected reading at OBDII Pin 6 ↔ Pin 14: <strong style="color:var(--accent-bright);">120 Ω</strong> with ECM disconnected · <strong style="color:var(--accent-bright);">~60 Ω</strong> with ECM connected (two 120 Ω terminators in parallel — one in pigtail, one inside the ECM).</div>
     </div>
 
     <div class="bench-note">
