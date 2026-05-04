@@ -271,6 +271,126 @@ body {
 }
 .bulk-state-readout strong { color: var(--accent-bright); font-weight: 700; }
 
+/* High-visibility BENCH SUB-SECTIONS (ECM / OBDII) — collapsible card style */
+.bench-sub {
+  margin: 16px 40px 18px;
+  background: var(--bg-card);
+  border: 2px solid var(--border-bright);
+  border-left-width: 5px;
+  position: relative;
+  transition: border-color 0.18s ease;
+}
+.bench-sub.ecm { border-left-color: #f0b840; }
+.bench-sub.obd2 { border-left-color: #1a6b8a; }
+.bench-sub:hover { border-color: var(--accent); }
+
+.bench-sub-header {
+  padding: 18px 24px;
+  display: flex;
+  align-items: center;
+  gap: 18px;
+  cursor: pointer;
+  user-select: none;
+  background: linear-gradient(90deg, rgba(255,255,255,0.025) 0%, rgba(255,255,255,0.01) 100%);
+  transition: background 0.15s;
+  border-bottom: 1.5px solid transparent;
+}
+.bench-sub:not(.collapsed) .bench-sub-header { border-bottom-color: var(--border); }
+.bench-sub-header:hover { background: rgba(255,255,255,0.04); }
+
+.bench-sub-icon-big {
+  width: 44px;
+  height: 44px;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 22px;
+  font-weight: 700;
+  flex-shrink: 0;
+  border: 2.5px solid;
+  transition: all 0.2s ease;
+}
+.bench-sub.ecm .bench-sub-icon-big {
+  background: rgba(240,184,64,0.15);
+  border-color: #f0b840;
+  color: #f0b840;
+}
+.bench-sub.obd2 .bench-sub-icon-big {
+  background: rgba(26,107,138,0.18);
+  border-color: #1a6b8a;
+  color: #76d7c4;
+}
+
+.bench-sub-titles { flex: 1; min-width: 0; }
+.bench-sub-tag {
+  font-family: 'Oswald', sans-serif;
+  font-size: 10px;
+  letter-spacing: 0.18em;
+  text-transform: uppercase;
+  color: var(--text-faded);
+  font-weight: 600;
+  margin-bottom: 2px;
+}
+.bench-sub-title {
+  font-family: 'Oswald', sans-serif;
+  font-size: 22px;
+  font-weight: 700;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+  line-height: 1.1;
+}
+.bench-sub.ecm .bench-sub-title { color: #f0b840; }
+.bench-sub.obd2 .bench-sub-title { color: #76d7c4; }
+.bench-sub-subtitle {
+  font-size: 12px;
+  color: var(--text-dim);
+  margin-top: 4px;
+  line-height: 1.45;
+}
+
+.bench-sub-toggle {
+  margin-left: auto;
+  width: 36px;
+  height: 36px;
+  border-radius: 50%;
+  background: var(--bg-elevated);
+  border: 2px solid var(--border-bright);
+  color: var(--text);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 0;
+  flex-shrink: 0;
+  transition: all 0.2s ease;
+}
+.bench-sub-toggle::before {
+  content: "−";
+  font-size: 24px;
+  font-weight: 900;
+  font-family: 'JetBrains Mono', monospace;
+  line-height: 1;
+}
+.bench-sub.collapsed .bench-sub-toggle::before { content: "+"; }
+.bench-sub.ecm .bench-sub-toggle { border-color: #f0b840; color: #f0b840; }
+.bench-sub.obd2 .bench-sub-toggle { border-color: #1a6b8a; color: #76d7c4; }
+.bench-sub-header:hover .bench-sub-toggle {
+  transform: scale(1.08);
+  box-shadow: 0 0 0 4px rgba(232,160,48,0.18);
+}
+
+.bench-sub-body { padding: 20px 24px 24px; }
+.bench-sub.collapsed .bench-sub-body { display: none; }
+
+@keyframes bench-sub-flash {
+  0%   { box-shadow: 0 0 0 0 rgba(232,160,48,0.55); }
+  100% { box-shadow: 0 0 0 18px rgba(232,160,48,0); }
+}
+.bench-sub-toggle.flashing { animation: bench-sub-flash 0.5s ease-out; }
+
+.bench-sub.collapsed .bench-sub-title { opacity: 0.75; }
+.bench-sub.collapsed .bench-sub-subtitle { opacity: 0.55; }
+
 /* SYSTEM SECTIONS */
 .system-section {
   margin: 0;
@@ -652,8 +772,20 @@ body {
     <div class="collapse-icon">▾</div>
   </div>
   <div class="system-body">
-    <div class="bench-callout">
-      <h3>Power Supply — NANKADF</h3>
+
+    <div class="bench-sub ecm" id="bench-ecm">
+      <div class="bench-sub-header" onclick="toggleSubsection(this)">
+        <div class="bench-sub-icon-big">⚡</div>
+        <div class="bench-sub-titles">
+          <div class="bench-sub-tag">Step 1 of 2 · Most pins</div>
+          <div class="bench-sub-title">ECM Wiring</div>
+          <div class="bench-sub-subtitle">Bench power supply, B+, ignition × 3, primary ground, CAN-H and CAN-L back to ECM connector pins. Seven wires from the bench supply / OBDII into the ECM harness.</div>
+        </div>
+        <div class="bench-sub-toggle"></div>
+      </div>
+      <div class="bench-sub-body">
+        <div class="bench-callout">
+          <h3>Power Supply — NANKADF</h3>
       <table class="bench-table">
         <tr><th>Parameter</th><th>Setting</th><th>Notes</th></tr>
         <tr><td>Voltage</td><td>12.0V</td><td>Set before connecting</td></tr>
@@ -894,19 +1026,32 @@ body {
       </div>
     </div>
 
-    <!-- LOW REFS NOTE -->
-    <div style="margin-top:16px;">
-      <div class="info-box">
-        <strong style="color:var(--text);">Sensor Low References — Not required for bench flash</strong><br>
-        X1-9 (BK, 2759) · X1-36 (BN, 1271) · X1-37 (PU, 1272) · X3-21 (BK, 2751) · X3-35 (BK, 2761)<br><br>
-        These are ECM-sourced sensor return grounds. They are only active when sensors are connected and the engine is running. Leave floating for bench flash. Connect to ground bus during engine harness build when sensors are wired.
-      </div>
-    </div>
+        <!-- LOW REFS NOTE -->
+        <div style="margin-top:16px;">
+          <div class="info-box">
+            <strong style="color:var(--text);">Sensor Low References — Not required for bench flash</strong><br>
+            X1-9 (BK, 2759) · X1-36 (BN, 1271) · X1-37 (PU, 1272) · X3-21 (BK, 2751) · X3-35 (BK, 2761)<br><br>
+            These are ECM-sourced sensor return grounds. They are only active when sensors are connected and the engine is running. Leave floating for bench flash. Connect to ground bus during engine harness build when sensors are wired.
+          </div>
+        </div>
 
-    <!-- OBDII SUBSECTION -->
-    <div style="margin-top:24px; border-top:1px solid var(--border-bright); padding-top:20px;">
-      <div style="font-family:'Oswald',sans-serif; font-size:14px; font-weight:600; letter-spacing:0.1em; text-transform:uppercase; color:var(--accent); margin-bottom:4px;">OBDII Port — J1962 Female</div>
-      <div style="font-size:11px; color:var(--text-dim); margin-bottom:16px;">Bench flash interface only · Not part of vehicle harness · MPVI4 plugs here · All 16 pins documented</div>
+      </div><!-- /bench-sub-body ECM -->
+    </div><!-- /bench-sub ecm -->
+
+    <div class="bench-sub obd2" id="bench-obd2">
+      <div class="bench-sub-header" onclick="toggleSubsection(this)">
+        <div class="bench-sub-icon-big">🔌</div>
+        <div class="bench-sub-titles">
+          <div class="bench-sub-tag">Step 2 of 2 · MPVI4 interface</div>
+          <div class="bench-sub-title">OBDII Wiring</div>
+          <div class="bench-sub-subtitle">J1962 female socket — what MPVI4 plugs into. Visual pinout, factory-vs-aftermarket terminator decision, and the 120 Ω verification readings.</div>
+        </div>
+        <div class="bench-sub-toggle"></div>
+      </div>
+      <div class="bench-sub-body">
+
+        <div style="font-family:'Oswald',sans-serif; font-size:14px; font-weight:600; letter-spacing:0.1em; text-transform:uppercase; color:var(--accent); margin-bottom:4px;">OBDII Port — J1962 Female</div>
+        <div style="font-size:11px; color:var(--text-dim); margin-bottom:16px;">Bench flash interface only · Not part of vehicle harness · MPVI4 plugs here · All 16 pins documented</div>
 
       <!-- TWO SCENARIO CALLOUT -->
       <div style="display:grid; grid-template-columns:1fr 1fr; gap:12px; margin-bottom:16px;">
@@ -1197,7 +1342,9 @@ body {
           </tr>
         </table>
       </div>
-    </div>
+
+      </div><!-- /bench-sub-body OBD2 -->
+    </div><!-- /bench-sub obd2 -->
 
   </div>
 </div>
@@ -2083,9 +2230,20 @@ function toggleSection(header) {
   updateSectionStateReadout();
 }
 
+function toggleSubsection(header) {
+  const sub = header.parentElement;
+  sub.classList.toggle('collapsed');
+  const toggle = header.querySelector('.bench-sub-toggle');
+  if (toggle) {
+    toggle.classList.remove('flashing');
+    void toggle.offsetWidth;
+    toggle.classList.add('flashing');
+  }
+}
+
 function expandAll() {
-  document.querySelectorAll('.system-section.collapsed').forEach(sec => sec.classList.remove('collapsed'));
-  document.querySelectorAll('.collapse-icon').forEach(icon => {
+  document.querySelectorAll('.system-section.collapsed, .bench-sub.collapsed').forEach(sec => sec.classList.remove('collapsed'));
+  document.querySelectorAll('.collapse-icon, .bench-sub-toggle').forEach(icon => {
     icon.classList.remove('flashing');
     void icon.offsetWidth;
     icon.classList.add('flashing');
@@ -2095,7 +2253,8 @@ function expandAll() {
 
 function collapseAll() {
   document.querySelectorAll('.system-section').forEach(sec => sec.classList.add('collapsed'));
-  document.querySelectorAll('.collapse-icon').forEach(icon => {
+  document.querySelectorAll('.bench-sub').forEach(sub => sub.classList.add('collapsed'));
+  document.querySelectorAll('.collapse-icon, .bench-sub-toggle').forEach(icon => {
     icon.classList.remove('flashing');
     void icon.offsetWidth;
     icon.classList.add('flashing');
