@@ -298,10 +298,10 @@ body {
 /* Hero tutorial CTA — primary funnel for landing visitors */
 .hero-tutorial {
   display: block;
-  background: linear-gradient(135deg, rgba(232,160,48,0.10) 0%, rgba(192,57,43,0.06) 100%);
-  border: 2px solid var(--accent);
-  border-left: 6px solid var(--accent-bright);
-  padding: 36px 40px 32px;
+  background: var(--bg-card);
+  border: 1px solid var(--border);
+  border-left: 4px solid var(--accent-bright);
+  padding: 32px 32px 28px;
   margin-bottom: 36px;
   text-decoration: none;
   color: var(--text);
@@ -312,22 +312,11 @@ body {
 }
 
 .hero-tutorial:hover {
-  background: linear-gradient(135deg, rgba(232,160,48,0.18) 0%, rgba(192,57,43,0.10) 100%);
+  border-color: var(--accent);
+  border-left-color: var(--accent-bright);
+  background: var(--bg-elevated);
   transform: translateY(-2px);
-  box-shadow: 0 14px 36px rgba(232,160,48,0.28);
-  border-color: var(--accent-bright);
-}
-
-.hero-tutorial::before {
-  content: "";
-  position: absolute;
-  top: -40px;
-  right: -40px;
-  width: 160px;
-  height: 160px;
-  border-radius: 50%;
-  background: radial-gradient(circle, rgba(232,160,48,0.18) 0%, transparent 70%);
-  pointer-events: none;
+  box-shadow: 0 10px 30px rgba(0,0,0,0.4);
 }
 
 .hero-tag {
