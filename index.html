@@ -349,6 +349,90 @@ body {
   box-shadow: 0 0 14px rgba(232,160,48,0.6);
 }
 
+/* Phase progression badges */
+.phase-row {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+  gap: 12px;
+  margin: 24px 0 28px;
+}
+.phase-badge {
+  padding: 14px 16px;
+  border: 1.5px solid;
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+}
+.phase-badge.complete {
+  background: rgba(46,204,113,0.10);
+  border-color: #27ae60;
+}
+.phase-badge.active {
+  background: rgba(232,160,48,0.12);
+  border-color: var(--accent);
+}
+.phase-badge.future {
+  background: rgba(110,118,129,0.10);
+  border-color: var(--text-faded);
+  opacity: 0.85;
+}
+.phase-tag {
+  font-family: 'Oswald', sans-serif;
+  font-size: 9.5px;
+  letter-spacing: 0.2em;
+  text-transform: uppercase;
+  font-weight: 700;
+}
+.phase-badge.complete .phase-tag { color: #2ecc71; }
+.phase-badge.active .phase-tag { color: var(--accent-bright); }
+.phase-badge.future .phase-tag { color: var(--text-faded); }
+.phase-title {
+  font-family: 'Oswald', sans-serif;
+  font-size: 13px;
+  font-weight: 700;
+  letter-spacing: 0.05em;
+  text-transform: uppercase;
+  color: var(--text);
+  margin-top: 2px;
+}
+.phase-desc {
+  font-size: 11px;
+  color: var(--text-dim);
+  font-family: 'JetBrains Mono', monospace;
+  line-height: 1.45;
+  margin-top: 2px;
+}
+
+/* Validation banner on landing */
+.landing-validation-banner {
+  margin: 0 0 28px;
+  padding: 16px 20px;
+  background: linear-gradient(90deg, rgba(232,160,48,0.10) 0%, rgba(232,160,48,0.03) 100%);
+  border: 1px solid rgba(232,160,48,0.4);
+  border-left: 4px solid var(--accent);
+  display: flex;
+  align-items: flex-start;
+  gap: 14px;
+}
+.landing-validation-banner .vb-icon {
+  flex-shrink: 0;
+  width: 30px; height: 30px;
+  border-radius: 50%;
+  background: rgba(232,160,48,0.18);
+  border: 2px solid var(--accent);
+  color: var(--accent-bright);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-family: 'Oswald', sans-serif;
+  font-size: 17px;
+  font-weight: 900;
+}
+.landing-validation-banner .vb-text { flex: 1; line-height: 1.5; font-size: 12px; color: var(--text); }
+.landing-validation-banner .vb-text strong { color: var(--accent-bright); }
+.landing-validation-banner .vb-x1 { color: #56d364; font-weight: 700; }
+.landing-validation-banner .vb-x2x3 { color: var(--accent-bright); font-weight: 700; }
+
 /* "More below" scroll cue under the hero */
 .scroll-cue {
   display: flex;
@@ -569,11 +653,38 @@ body {
         <div class="meta-value">YRH</div>
       </div>
       <div class="meta-item">
-        <div class="meta-label">Verified</div>
-        <div class="meta-value">2026-04-28</div>
+        <div class="meta-label">Last test</div>
+        <div class="meta-value">2026-05-09</div>
       </div>
     </div>
   </header>
+
+  <div class="landing-validation-banner">
+    <div class="vb-icon">!</div>
+    <div class="vb-text">
+      <strong style="display:block; font-family:'Oswald',sans-serif; font-size:11px; letter-spacing:0.18em; text-transform:uppercase; margin-bottom:4px;">Current Validation Status</strong>
+      <span class="vb-x1">X1 / J1 (Blue):</span> position and wire color <strong>physically verified</strong>.
+      <span class="vb-x2x3">X2 / J2 (Black) and X3 / J3 (Grey):</span> connector layouts verified, but <strong>individual pin population, color, and function verification still in progress</strong>. Do not treat X2 / X3 wiring as final until each circuit is marked physically verified or electrically observed.
+    </div>
+  </div>
+
+  <div class="phase-row">
+    <div class="phase-badge complete">
+      <div class="phase-tag">✓ Phase 1 — Complete</div>
+      <div class="phase-title">Bench platform live</div>
+      <div class="phase-desc">ECM power · HP Tuners comm · VATS delete · manual-trans cal change</div>
+    </div>
+    <div class="phase-badge active">
+      <div class="phase-tag">⟳ Phase 2 — In Progress</div>
+      <div class="phase-title">Circuit verification</div>
+      <div class="phase-desc">X2 / X3 hand verification · subsystem output characterization</div>
+    </div>
+    <div class="phase-badge future">
+      <div class="phase-tag">… Future</div>
+      <div class="phase-title">Subsystem load tests</div>
+      <div class="phase-desc">Fan PWM · sensor simulation · output-load validation</div>
+    </div>
+  </div>
 
   <a class="hero-tutorial" href="systems.html#bench">
     <span class="hero-tag">⚡ Start Here</span>

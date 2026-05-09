@@ -391,6 +391,74 @@ body {
 .bench-sub.collapsed .bench-sub-title { opacity: 0.75; }
 .bench-sub.collapsed .bench-sub-subtitle { opacity: 0.55; }
 
+/* VALIDATION STATUS BANNER */
+.validation-banner {
+  margin: 0;
+  padding: 18px 40px;
+  background: linear-gradient(90deg, rgba(232,160,48,0.12) 0%, rgba(232,160,48,0.04) 100%);
+  border-bottom: 1px solid rgba(232,160,48,0.4);
+  border-left: 4px solid var(--accent);
+  display: flex;
+  align-items: flex-start;
+  gap: 16px;
+}
+.validation-banner-icon {
+  flex-shrink: 0;
+  width: 32px;
+  height: 32px;
+  border-radius: 50%;
+  background: rgba(232,160,48,0.18);
+  border: 2px solid var(--accent);
+  color: var(--accent-bright);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-family: 'Oswald', sans-serif;
+  font-size: 18px;
+  font-weight: 900;
+}
+.validation-banner-text { flex: 1; line-height: 1.55; }
+.validation-banner-title {
+  font-family: 'Oswald', sans-serif;
+  font-size: 11px;
+  letter-spacing: 0.18em;
+  text-transform: uppercase;
+  color: var(--accent-bright);
+  font-weight: 700;
+  margin-bottom: 6px;
+}
+.validation-banner-body {
+  font-size: 12.5px;
+  color: var(--text);
+  font-family: 'JetBrains Mono', monospace;
+}
+.validation-banner-body strong { color: var(--accent-bright); }
+.validation-banner-body .vb-x1 { color: #56d364; font-weight: 700; }
+.validation-banner-body .vb-x2x3 { color: var(--accent-bright); font-weight: 700; }
+
+/* STATUS TAGS — used in body content */
+.status-tag {
+  display: inline-block;
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 9px;
+  font-weight: 700;
+  letter-spacing: 0.1em;
+  padding: 3px 8px;
+  border: 1px solid;
+  text-transform: uppercase;
+  white-space: nowrap;
+  margin: 0 3px 2px 0;
+  vertical-align: baseline;
+}
+.status-tag.unverified  { background: rgba(110,118,129,0.15); border-color: var(--text-faded); color: var(--text-dim); }
+.status-tag.si-sourced  { background: rgba(86,166,255,0.12); border-color: #58a6ff; color: #79b8ff; }
+.status-tag.physical    { background: rgba(86,211,100,0.15); border-color: #56d364; color: #56d364; }
+.status-tag.electrical  { background: rgba(86,166,255,0.18); border-color: #1a6b8a; color: #58c1d9; }
+.status-tag.functional  { background: rgba(46,204,113,0.18); border-color: #27ae60; color: #2ecc71; }
+.status-tag.suspect     { background: rgba(231,76,60,0.18); border-color: #e74c3c; color: #ff8a80; }
+.status-tag.final       { background: rgba(232,160,48,0.18); border-color: var(--accent); color: var(--accent-bright); }
+.status-tag.pending     { background: rgba(231,127,40,0.12); border-color: #e67e22; color: #f0a050; }
+
 /* SYSTEM SECTIONS */
 .system-section {
   margin: 0;
@@ -702,6 +770,7 @@ body {
   <div class="sidebar-section">
     <div class="sidebar-heading">Systems</div>
     <a class="nav-link" href="#bench"><span class="nav-dot" style="background:var(--accent-bright)"></span>Bench Flash</a>
+    <a class="nav-link" href="#fixture"><span class="nav-dot" style="background:#2ecc71"></span>Bench Fixture</a>
     <a class="nav-link" href="#power"><span class="nav-dot" style="background:var(--cat-power)"></span>Power & Ground</a>
     <a class="nav-link" href="#ignition"><span class="nav-dot" style="background:var(--cat-ignition)"></span>Ignition Inputs</a>
     <a class="nav-link" href="#comm"><span class="nav-dot" style="background:var(--cat-comm)"></span>CAN / Comms</a>
@@ -718,6 +787,7 @@ body {
     <a class="nav-link" href="#starter"><span class="nav-dot" style="background:var(--cat-ground)"></span>Starter</a>
     <a class="nav-link" href="#cruise"><span class="nav-dot" style="background:var(--cat-cruise)"></span>Cruise / Body</a>
     <a class="nav-link" href="#evap"><span class="nav-dot" style="background:var(--cat-relay)"></span>EVAP / AIR</a>
+    <a class="nav-link" href="#fan-control"><span class="nav-dot" style="background:#76d7c4"></span>Fan Control (Future)</a>
     <a class="nav-link" href="#anomalies"><span class="nav-dot" style="background:#c0392b"></span>Anomalies</a>
   </div>
 
@@ -726,8 +796,9 @@ body {
     <div style="padding:0 16px;font-size:10px;color:var(--text-faded);line-height:1.6;">
       GM SI factory diagrams<br>
       Vortec4200 Wiki (Nivlac57)<br>
-      Physical connector verified<br>
-      2026-04-28
+      X1 physically verified<br>
+      X2/X3 layouts verified<br>
+      Last test: 2026-05-09
     </div>
   </div>
 </nav>
@@ -743,7 +814,7 @@ body {
       <div class="meta-item"><div class="meta-dot"></div>Service: 12607096</div>
       <div class="meta-item"><div class="meta-dot"></div>Broadcast: YRH</div>
       <div class="meta-item"><div class="meta-dot"></div>App: 2008-2009 Trailblazer LL8 4.2L I6</div>
-      <div class="meta-item"><div class="meta-dot"></div>Compiled: 2026-04-29</div>
+      <div class="meta-item"><div class="meta-dot"></div>Last test: 2026-05-09</div>
     </div>
   </div>
 
@@ -757,6 +828,17 @@ body {
       <button class="bulk-toggle-btn btn-close" type="button" onclick="collapseAll()" title="Close all sections">
         <span class="bulk-icon">−</span>Close All
       </button>
+    </div>
+  </div>
+</div>
+
+<div class="validation-banner">
+  <div class="validation-banner-icon">!</div>
+  <div class="validation-banner-text">
+    <div class="validation-banner-title">Current Validation Status</div>
+    <div class="validation-banner-body">
+      <span class="vb-x1">X1 / J1 (Blue):</span> position and wire color <strong>physically verified</strong>.
+      <span class="vb-x2x3">X2 / J2 (Black) and X3 / J3 (Grey):</span> connector layouts verified, but <strong>individual pin population, color, and function verification is still in progress</strong>. Do not treat X2 / X3 wiring as final until each circuit is marked physically verified or electrically observed.
     </div>
   </div>
 </div>
@@ -1026,12 +1108,14 @@ body {
       </div>
     </div>
 
-        <!-- LOW REFS NOTE -->
+        <!-- GROUNDING CLARIFICATION -->
         <div style="margin-top:16px;">
-          <div class="info-box">
-            <strong style="color:var(--text);">Sensor Low References — Not required for bench flash</strong><br>
-            X1-9 (BK, 2759) · X1-36 (BN, 1271) · X1-37 (PU, 1272) · X3-21 (BK, 2751) · X3-35 (BK, 2761)<br><br>
-            These are ECM-sourced sensor return grounds. They are only active when sensors are connected and the engine is running. Leave floating for bench flash. Connect to ground bus during engine harness build when sensors are wired.
+          <div class="info-box" style="border-left:3px solid #56d364;">
+            <strong style="color:#56d364;">Bench grounding — what IS required.</strong>
+            Bench communication requires <strong style="color:var(--accent-bright);">ECM primary ground at X2-73</strong> and <strong style="color:var(--accent-bright);">OBDII pins 4 / 5</strong> referenced to the same bench ground bus. That is the entire ground requirement for bench-flash configuration.<br><br>
+            <strong style="color:var(--text);">Sensor low references — NOT required for bench flash.</strong>
+            <span style="color:var(--text-faded);">X1-9 (BK, 2759) · X1-36 (BN, 1271) · X1-37 (PU, 1272) · X3-21 (BK, 2751) · X3-35 (BK, 2761)</span><br>
+            These are ECM-sourced sensor return paths, <em>not</em> primary power grounds. <strong style="color:#e74c3c;">Do not tie sensor low references to the power ground bus</strong> unless a specific sensor circuit is being intentionally wired and verified. Leave floating for bench flash; connect during engine harness build when sensors are wired.
           </div>
         </div>
 
@@ -1345,6 +1429,94 @@ body {
 
       </div><!-- /bench-sub-body OBD2 -->
     </div><!-- /bench-sub obd2 -->
+
+  </div>
+</div>
+
+<!-- ═══════════════════════════════════════════════ BENCH FIXTURE -->
+<div class="system-section" id="fixture">
+  <div class="system-header" onclick="toggleSection(this)">
+    <div class="system-color-bar" style="background:#27ae60"></div>
+    <div>
+      <div class="system-title" style="color:#2ecc71">Bench Fixture — Current Completion Level</div>
+      <div class="system-subtitle">Physical bench platform · what works today · what's pending validation</div>
+    </div>
+    <div class="collapse-icon">▾</div>
+  </div>
+  <div class="system-body">
+
+    <div class="bench-callout" style="background:rgba(46,204,113,0.08); border-color:#1e8449; border-left-color:#2ecc71;">
+      <h3 style="color:#2ecc71;">Project Status</h3>
+      <p style="font-size:12.5px; color:var(--text); line-height:1.6;">
+        This fixture was built first to power the E67 ECM, establish HP Tuners communication, remove VATS, and change the calibration to manual transmission operation. <span class="status-tag functional">Phase 1 complete</span> The fixture now serves as a staged ECM development and validation platform.
+      </p>
+    </div>
+
+    <div class="bench-callout" style="background:rgba(46,204,113,0.05); border-color:rgba(39,174,96,0.5); border-left-color:#27ae60;">
+      <h3 style="color:#2ecc71;">Current Fixture Details</h3>
+      <ul style="list-style:none; padding:0; margin:0; display:flex; flex-direction:column; gap:6px;">
+        <li style="padding-left:18px; position:relative; font-size:12px; color:var(--text-dim); line-height:1.55;"><span style="position:absolute; left:0; color:#56d364;">▸</span>ECM installed in enclosure with factory X1/X2/X3 connectors. <span class="status-tag physical">Physically verified</span></li>
+        <li style="padding-left:18px; position:relative; font-size:12px; color:var(--text-dim); line-height:1.55;"><span style="position:absolute; left:0; color:#56d364;">▸</span>External bench power supply enters through bottom of enclosure. <span class="status-tag functional">Functional</span></li>
+        <li style="padding-left:18px; position:relative; font-size:12px; color:var(--text-dim); line-height:1.55;"><span style="position:absolute; left:0; color:#56d364;">▸</span>Power feeds a fused positive distribution bus. <span class="status-tag functional">Functional</span></li>
+        <li style="padding-left:18px; position:relative; font-size:12px; color:var(--text-dim); line-height:1.55;"><span style="position:absolute; left:0; color:#56d364;">▸</span>Ground feeds a common ground bus. <span class="status-tag functional">Functional</span></li>
+        <li style="padding-left:18px; position:relative; font-size:12px; color:var(--text-dim); line-height:1.55;"><span style="position:absolute; left:0; color:#56d364;">▸</span>One main power switch controls bench B+. <span class="status-tag functional">Functional</span></li>
+        <li style="padding-left:18px; position:relative; font-size:12px; color:var(--text-dim); line-height:1.55;"><span style="position:absolute; left:0; color:#56d364;">▸</span>One ignition switch controls ECM ignition feeds. <span class="status-tag functional">Functional</span></li>
+        <li style="padding-left:18px; position:relative; font-size:12px; color:var(--text-dim); line-height:1.55;"><span style="position:absolute; left:0; color:#56d364;">▸</span>Trailblazer OBDII port mounted in the enclosure for HP Tuners / MPVI communication. <span class="status-tag functional">Functional</span></li>
+        <li style="padding-left:18px; position:relative; font-size:12px; color:var(--text-dim); line-height:1.55;"><span style="position:absolute; left:0; color:#56d364;">▸</span>ECM X2-73 primary ground lands on the ground bus. <span class="status-tag electrical">Electrically observed</span></li>
+        <li style="padding-left:18px; position:relative; font-size:12px; color:var(--text-dim); line-height:1.55;"><span style="position:absolute; left:0; color:#56d364;">▸</span>OBDII pins 4 and 5 are tied together and landed on a separate ground-bus terminal. <span class="status-tag electrical">Electrically observed</span></li>
+        <li style="padding-left:18px; position:relative; font-size:12px; color:var(--text-dim); line-height:1.55;"><span style="position:absolute; left:0; color:#56d364;">▸</span>ECM B+ and ground additions use 14 AWG silicone wire.</li>
+        <li style="padding-left:18px; position:relative; font-size:12px; color:var(--text-dim); line-height:1.55;"><span style="position:absolute; left:0; color:#56d364;">▸</span>Other ECM wires remain factory OEM harness wires unless explicitly documented.</li>
+      </ul>
+    </div>
+
+    <div class="bench-callout" style="background:var(--bg-card); border-color:var(--border-bright); border-left-color:var(--accent);">
+      <h3>Capability Completion</h3>
+      <table style="width:100%; border-collapse:collapse; font-size:12px; font-family:'JetBrains Mono',monospace;">
+        <thead>
+          <tr style="border-bottom:2px solid var(--border-bright);">
+            <th style="text-align:left; padding:8px 10px 8px 0; font-family:'Oswald',sans-serif; font-size:10px; letter-spacing:0.12em; text-transform:uppercase; color:var(--text-faded); font-weight:600;">Capability</th>
+            <th style="text-align:left; padding:8px 10px 8px 0; font-family:'Oswald',sans-serif; font-size:10px; letter-spacing:0.12em; text-transform:uppercase; color:var(--text-faded); font-weight:600;">Status</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr style="border-bottom:1px solid rgba(255,255,255,0.05);"><td style="padding:7px 10px 7px 0;">ECM power-up</td><td><span class="status-tag functional">Complete / functional</span></td></tr>
+          <tr style="border-bottom:1px solid rgba(255,255,255,0.05);"><td style="padding:7px 10px 7px 0;">HP Tuners communication</td><td><span class="status-tag functional">Complete / functional</span></td></tr>
+          <tr style="border-bottom:1px solid rgba(255,255,255,0.05);"><td style="padding:7px 10px 7px 0;">VATS delete</td><td><span class="status-tag functional">Complete</span></td></tr>
+          <tr style="border-bottom:1px solid rgba(255,255,255,0.05);"><td style="padding:7px 10px 7px 0;">Manual transmission calibration change</td><td><span class="status-tag functional">Complete</span></td></tr>
+          <tr style="border-bottom:1px solid rgba(255,255,255,0.05);"><td style="padding:7px 10px 7px 0;">Main + ignition switching</td><td><span class="status-tag functional">Complete</span></td></tr>
+          <tr style="border-bottom:1px solid rgba(255,255,255,0.05);"><td style="padding:7px 10px 7px 0;">Fused B+ distribution</td><td><span class="status-tag functional">Complete</span></td></tr>
+          <tr style="border-bottom:1px solid rgba(255,255,255,0.05);"><td style="padding:7px 10px 7px 0;">OBDII communication port</td><td><span class="status-tag functional">Complete</span></td></tr>
+          <tr style="border-bottom:1px solid rgba(255,255,255,0.05);"><td style="padding:7px 10px 7px 0;">ECT simulation</td><td><span class="status-tag pending">Temporary functional test aid</span></td></tr>
+          <tr style="border-bottom:1px solid rgba(255,255,255,0.05);"><td style="padding:7px 10px 7px 0;">Sensor simulation</td><td><span class="status-tag unverified">Future work</span></td></tr>
+          <tr style="border-bottom:1px solid rgba(255,255,255,0.05);"><td style="padding:7px 10px 7px 0;">Output validation</td><td><span class="status-tag unverified">Future work</span></td></tr>
+          <tr style="border-bottom:1px solid rgba(255,255,255,0.05);"><td style="padding:7px 10px 7px 0;">Fan-control validation</td><td><span class="status-tag unverified">Future work</span></td></tr>
+          <tr><td style="padding:7px 10px 7px 0;">Full X2 / X3 hand verification</td><td><span class="status-tag pending">In progress</span></td></tr>
+        </tbody>
+      </table>
+    </div>
+
+    <div class="info-box" style="margin-top:18px; border-left:3px solid #56d364;">
+      <strong style="color:#56d364;">Grounding clarification.</strong>
+      Bench communication requires <strong style="color:var(--accent-bright);">ECM primary ground at X2-73</strong> and <strong style="color:var(--accent-bright);">OBDII pins 4 / 5</strong> referenced to the same bench ground bus. Sensor low-reference circuits are <em>not</em> primary power grounds and are <strong>not required</strong> for the basic bench-flash configuration. Do not tie sensor low references to the power ground bus unless a specific sensor circuit is being intentionally wired and verified.
+    </div>
+
+    <div class="bench-callout" style="background:rgba(231,127,40,0.06); border-color:#a05a1a; border-left-color:#e67e22; margin-top:18px;">
+      <h3 style="color:#f0a050;">Temporary ECT Simulator</h3>
+      <p style="font-size:12.5px; color:var(--text); line-height:1.6;">
+        A temporary potentiometer is installed to simulate the ECT thermistor for HP Tuners temperature reporting and fan-control provocation testing. <span class="status-tag pending">Functional test aid only</span> This is functional for testing only and is <strong style="color:#e74c3c;">not yet a calibrated permanent simulator</strong>.
+      </p>
+      <div style="margin-top:12px; padding-top:12px; border-top:1px solid rgba(255,255,255,0.06);">
+        <strong style="color:#f0a050; font-family:'Oswald',sans-serif; font-size:11px; letter-spacing:0.1em; text-transform:uppercase;">Final ECT simulator design — pending:</strong>
+        <ul style="list-style:none; padding:0; margin:8px 0 0; display:flex; flex-direction:column; gap:5px;">
+          <li style="padding-left:18px; position:relative; font-size:11.5px; color:var(--text-dim); line-height:1.5;"><span style="position:absolute; left:0; color:#e67e22;">▸</span>verify correct GM ECT resistance / temperature curve</li>
+          <li style="padding-left:18px; position:relative; font-size:11.5px; color:var(--text-dim); line-height:1.5;"><span style="position:absolute; left:0; color:#e67e22;">▸</span>select correct potentiometer range</li>
+          <li style="padding-left:18px; position:relative; font-size:11.5px; color:var(--text-dim); line-height:1.5;"><span style="position:absolute; left:0; color:#e67e22;">▸</span>use multi-turn potentiometer</li>
+          <li style="padding-left:18px; position:relative; font-size:11.5px; color:var(--text-dim); line-height:1.5;"><span style="position:absolute; left:0; color:#e67e22;">▸</span>add fixed safety resistor to prevent near-zero resistance</li>
+          <li style="padding-left:18px; position:relative; font-size:11.5px; color:var(--text-dim); line-height:1.5;"><span style="position:absolute; left:0; color:#e67e22;">▸</span>document resistance-to-temperature chart</li>
+          <li style="padding-left:18px; position:relative; font-size:11.5px; color:var(--text-dim); line-height:1.5;"><span style="position:absolute; left:0; color:#e67e22;">▸</span>prevent open-circuit or impossible-value behavior during powered testing</li>
+        </ul>
+      </div>
+    </div>
 
   </div>
 </div>
@@ -2178,6 +2350,149 @@ body {
   </div>
 </div>
 
+<!-- ═══════════════════════════════════════════════ FAN CONTROL -->
+<div class="system-section" id="fan-control">
+  <div class="system-header" onclick="toggleSection(this)">
+    <div class="system-color-bar" style="background:#1a6b8a"></div>
+    <div>
+      <div class="system-title" style="color:#76d7c4;">Cooling Fan Control — Future Validation</div>
+      <div class="system-subtitle">Calibration capability vs. proven output · KOEO discovery test plan · candidate fan evaluation</div>
+    </div>
+    <div class="collapse-icon">▾</div>
+  </div>
+  <div class="system-body">
+
+    <div class="info-box" style="border-left:3px solid #1a6b8a; margin-bottom:16px;">
+      The E67 calibration exposes multiple fan-control strategy options, including <strong>Discrete</strong>, <strong>PWM Electric</strong>, <strong>PWM EV</strong>, and <strong>PWM MRE</strong>. These options prove calibration-level support exists, but <strong style="color:var(--accent-bright);">do not yet prove which physical ECM pin is active, what electrical waveform is generated, or whether a target fan module is compatible</strong>.
+    </div>
+
+    <div class="bench-callout" style="background:rgba(26,107,138,0.10); border-color:#1a6b8a; border-left-color:#1a6b8a;">
+      <h3 style="color:#76d7c4;">Status of Each Validation Layer</h3>
+      <ul style="list-style:none; padding:0; margin:0; display:flex; flex-direction:column; gap:6px;">
+        <li style="padding-left:18px; position:relative; font-size:12px; color:var(--text-dim); line-height:1.55;"><span style="position:absolute; left:0; color:#76d7c4;">▸</span><strong style="color:var(--text);">Calibration capability:</strong> visible in HP Tuners. <span class="status-tag si-sourced">SI sourced</span></li>
+        <li style="padding-left:18px; position:relative; font-size:12px; color:var(--text-dim); line-height:1.55;"><span style="position:absolute; left:0; color:#76d7c4;">▸</span><strong style="color:var(--text);">Candidate output pin:</strong> not verified. <span class="status-tag unverified">Unverified</span></li>
+        <li style="padding-left:18px; position:relative; font-size:12px; color:var(--text-dim); line-height:1.55;"><span style="position:absolute; left:0; color:#76d7c4;">▸</span><strong style="color:var(--text);">Electrically observed output:</strong> pending. <span class="status-tag pending">Pending</span></li>
+        <li style="padding-left:18px; position:relative; font-size:12px; color:var(--text-dim); line-height:1.55;"><span style="position:absolute; left:0; color:#76d7c4;">▸</span><strong style="color:var(--text);">Fan module compatibility:</strong> pending. <span class="status-tag pending">Pending</span></li>
+        <li style="padding-left:18px; position:relative; font-size:12px; color:var(--text-dim); line-height:1.55;"><span style="position:absolute; left:0; color:#76d7c4;">▸</span><strong style="color:var(--text);">Vehicle validated:</strong> pending. <span class="status-tag pending">Pending</span></li>
+      </ul>
+    </div>
+
+    <div class="info-box" style="border-left:3px solid var(--accent); background:rgba(232,160,48,0.06);">
+      <strong style="color:var(--accent-bright);">Important distinction.</strong>
+      Fan Type selection may change output logic and may potentially change which ECM output is active. <strong>Discrete mode</strong> should be tested as a relay-style output, <em>not</em> as PWM. <strong>PWM Electric</strong>, <strong>PWM EV</strong>, and <strong>PWM MRE</strong> must each be tested separately.
+    </div>
+
+    <!-- KOEO TEST -->
+    <div style="margin-top:24px; border-top:1px solid var(--border-bright); padding-top:20px;">
+      <div style="font-family:'Oswald',sans-serif; font-size:14px; font-weight:600; letter-spacing:0.1em; text-transform:uppercase; color:var(--accent); margin-bottom:4px;">KOEO Fan Output Discovery Test</div>
+      <div style="font-size:11px; color:var(--text-dim); margin-bottom:14px;">Determine whether the E67 produces any fan-control output with key on, engine off, and whether output behavior changes by fan-control mode</div>
+
+      <div class="bench-callout" style="background:var(--bg-card);">
+        <h3>Test Conditions</h3>
+        <ul style="list-style:none; padding:0; margin:0; display:flex; flex-direction:column; gap:5px;">
+          <li style="padding-left:18px; position:relative; font-size:12px; color:var(--text-dim); line-height:1.5;"><span style="position:absolute; left:0; color:var(--accent);">▸</span>ECM powered</li>
+          <li style="padding-left:18px; position:relative; font-size:12px; color:var(--text-dim); line-height:1.5;"><span style="position:absolute; left:0; color:var(--accent);">▸</span>ignition ON</li>
+          <li style="padding-left:18px; position:relative; font-size:12px; color:var(--text-dim); line-height:1.5;"><span style="position:absolute; left:0; color:var(--accent);">▸</span>engine not running</li>
+          <li style="padding-left:18px; position:relative; font-size:12px; color:var(--text-dim); line-height:1.5;"><span style="position:absolute; left:0; color:var(--accent);">▸</span>HP Tuners connected</li>
+          <li style="padding-left:18px; position:relative; font-size:12px; color:var(--text-dim); line-height:1.5;"><span style="position:absolute; left:0; color:var(--accent);">▸</span>ECT forced high with temporary ECT simulator</li>
+          <li style="padding-left:18px; position:relative; font-size:12px; color:var(--text-dim); line-height:1.5;"><span style="position:absolute; left:0; color:var(--accent);">▸</span>fan tables configured to command high fan percentage</li>
+          <li style="padding-left:18px; position:relative; font-size:12px; color:var(--text-dim); line-height:1.5;"><span style="position:absolute; left:0; color:var(--accent);">▸</span>no actual fan connected during discovery testing</li>
+        </ul>
+      </div>
+
+      <div style="margin-top:14px; font-family:'Oswald',sans-serif; font-size:11px; letter-spacing:0.12em; text-transform:uppercase; color:var(--text-faded); font-weight:600;">Test modes (each tested separately)</div>
+      <div style="display:flex; gap:8px; flex-wrap:wrap; margin-top:6px; margin-bottom:14px;">
+        <span class="status-tag si-sourced">Discrete</span>
+        <span class="status-tag si-sourced">PWM Electric</span>
+        <span class="status-tag si-sourced">PWM EV</span>
+        <span class="status-tag si-sourced">PWM MRE</span>
+      </div>
+
+      <div style="font-family:'Oswald',sans-serif; font-size:11px; letter-spacing:0.12em; text-transform:uppercase; color:var(--text-faded); font-weight:600; margin-top:14px;">Measurement table — fill in as you test</div>
+      <table style="width:100%; border-collapse:collapse; font-size:11px; font-family:'JetBrains Mono',monospace; margin-top:8px;">
+        <thead>
+          <tr style="border-bottom:2px solid var(--border-bright);">
+            <th style="text-align:left; padding:7px 8px 7px 0; font-family:'Oswald',sans-serif; font-size:9.5px; letter-spacing:0.1em; text-transform:uppercase; color:var(--text-faded); font-weight:600;">Fan Type</th>
+            <th style="text-align:left; padding:7px 8px 7px 0; font-family:'Oswald',sans-serif; font-size:9.5px; letter-spacing:0.1em; text-transform:uppercase; color:var(--text-faded); font-weight:600;">Candidate Pin</th>
+            <th style="text-align:left; padding:7px 8px 7px 0; font-family:'Oswald',sans-serif; font-size:9.5px; letter-spacing:0.1em; text-transform:uppercase; color:var(--text-faded); font-weight:600;">DC Voltage</th>
+            <th style="text-align:left; padding:7px 8px 7px 0; font-family:'Oswald',sans-serif; font-size:9.5px; letter-spacing:0.1em; text-transform:uppercase; color:var(--text-faded); font-weight:600;">Frequency</th>
+            <th style="text-align:left; padding:7px 8px 7px 0; font-family:'Oswald',sans-serif; font-size:9.5px; letter-spacing:0.1em; text-transform:uppercase; color:var(--text-faded); font-weight:600;">Duty Cycle</th>
+            <th style="text-align:left; padding:7px 8px 7px 0; font-family:'Oswald',sans-serif; font-size:9.5px; letter-spacing:0.1em; text-transform:uppercase; color:var(--text-faded); font-weight:600;">Pull-Up Present</th>
+            <th style="text-align:left; padding:7px 8px 7px 0; font-family:'Oswald',sans-serif; font-size:9.5px; letter-spacing:0.1em; text-transform:uppercase; color:var(--text-faded); font-weight:600;">State Change</th>
+            <th style="text-align:left; padding:7px 8px 7px 0; font-family:'Oswald',sans-serif; font-size:9.5px; letter-spacing:0.1em; text-transform:uppercase; color:var(--text-faded); font-weight:600;">Notes</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr style="border-bottom:1px solid rgba(255,255,255,0.05);"><td style="padding:7px 8px 7px 0; color:var(--text);">Discrete</td><td style="color:var(--text-faded);">—</td><td style="color:var(--text-faded);">—</td><td style="color:var(--text-faded);">—</td><td style="color:var(--text-faded);">—</td><td style="color:var(--text-faded);">—</td><td style="color:var(--text-faded);">—</td><td style="color:var(--text-faded);">—</td></tr>
+          <tr style="border-bottom:1px solid rgba(255,255,255,0.05);"><td style="padding:7px 8px 7px 0; color:var(--text);">PWM Electric</td><td style="color:var(--text-faded);">—</td><td style="color:var(--text-faded);">—</td><td style="color:var(--text-faded);">—</td><td style="color:var(--text-faded);">—</td><td style="color:var(--text-faded);">—</td><td style="color:var(--text-faded);">—</td><td style="color:var(--text-faded);">—</td></tr>
+          <tr style="border-bottom:1px solid rgba(255,255,255,0.05);"><td style="padding:7px 8px 7px 0; color:var(--text);">PWM EV</td><td style="color:var(--text-faded);">—</td><td style="color:var(--text-faded);">—</td><td style="color:var(--text-faded);">—</td><td style="color:var(--text-faded);">—</td><td style="color:var(--text-faded);">—</td><td style="color:var(--text-faded);">—</td><td style="color:var(--text-faded);">—</td></tr>
+          <tr><td style="padding:7px 8px 7px 0; color:var(--text);">PWM MRE</td><td style="color:var(--text-faded);">—</td><td style="color:var(--text-faded);">—</td><td style="color:var(--text-faded);">—</td><td style="color:var(--text-faded);">—</td><td style="color:var(--text-faded);">—</td><td style="color:var(--text-faded);">—</td><td style="color:var(--text-faded);">—</td></tr>
+        </tbody>
+      </table>
+
+      <div class="info-box" style="border-left:3px solid var(--accent); background:rgba(232,160,48,0.06); margin-top:14px;">
+        <strong style="color:var(--accent-bright);">Do not assume a single fan-output pin.</strong> All candidate fan-control pins must be measured under each fan-type configuration.
+      </div>
+
+      <div class="info-box" style="border-left:3px solid #e74c3c; background:rgba(231,76,60,0.06); margin-top:8px;">
+        <strong style="color:#e74c3c;">Pull-up test note.</strong>
+        Do not assume the ECM provides the pull-up. For each candidate pin, first measure unloaded voltage. If safe, test with high-value pull-ups such as 10k to 5V and 10k to 12V to determine whether the ECM is acting as an open-drain / open-collector low-side driver. <strong>Do not heavily load unknown ECM outputs.</strong>
+      </div>
+
+      <div class="info-box" style="border-left:3px solid #1a6b8a; margin-top:8px;">
+        <strong style="color:#76d7c4;">Runtime uncertainty.</strong>
+        It is not yet known whether the E67 fan-control output is active during KOEO operation or requires an engine-running state such as CKP / RPM activity. If KOEO testing produces no output, the next stage is RPM / CKP simulation or engine-running validation.
+      </div>
+    </div>
+
+    <!-- CAMARO FAN CANDIDATE -->
+    <div style="margin-top:28px; border-top:1px solid var(--border-bright); padding-top:20px;">
+      <div style="font-family:'Oswald',sans-serif; font-size:14px; font-weight:600; letter-spacing:0.1em; text-transform:uppercase; color:var(--accent); margin-bottom:4px;">Candidate Fan Under Evaluation — GM 15-81927 / 84100128 Family</div>
+      <div style="font-size:11px; color:var(--text-dim); margin-bottom:14px;">Large brushless PWM fan assembly · soft-start behavior · electrical compatibility unverified</div>
+
+      <div class="info-box" style="border-left:3px solid #1a6b8a;">
+        Candidate cooling fan family under evaluation: <strong style="color:var(--accent-bright);">GM / ACDelco 15-81927</strong>, associated with GM 84100128 references. This is being considered because it is a large brushless PWM fan assembly commonly used in swaps and reported to provide soft-start behavior and reduced inrush compared with relay-switched brushed fans.
+      </div>
+
+      <div class="info-box" style="border-left:3px solid #e74c3c; background:rgba(231,76,60,0.08); margin-top:12px;">
+        <strong style="color:#e74c3c;">Caution.</strong>
+        Electrical compatibility with this E67 ECM is <strong>not yet verified</strong>. The fan must <em>not</em> be documented as compatible until control-input voltage, frequency, polarity, duty interpretation, failsafe behavior, current draw, and connector pinout are confirmed.
+      </div>
+
+      <div class="bench-callout" style="background:var(--bg-card); margin-top:14px;">
+        <h3>Unknowns — must be measured / sourced before integration</h3>
+        <table style="width:100%; border-collapse:collapse; font-size:12px; font-family:'JetBrains Mono',monospace;">
+          <thead>
+            <tr style="border-bottom:2px solid var(--border-bright);">
+              <th style="text-align:left; padding:7px 10px 7px 0; font-family:'Oswald',sans-serif; font-size:10px; letter-spacing:0.1em; text-transform:uppercase; color:var(--text-faded); font-weight:600;">Unknown</th>
+              <th style="text-align:left; padding:7px 10px 7px 0; font-family:'Oswald',sans-serif; font-size:10px; letter-spacing:0.1em; text-transform:uppercase; color:var(--text-faded); font-weight:600;">Status</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr style="border-bottom:1px solid rgba(255,255,255,0.05);"><td style="padding:6px 10px 6px 0;">PWM command frequency</td><td style="color:var(--text-dim);">Commonly reported around 128 Hz, <strong style="color:var(--accent-bright);">not yet verified</strong> for this exact ECM/fan combination</td></tr>
+            <tr style="border-bottom:1px solid rgba(255,255,255,0.05);"><td style="padding:6px 10px 6px 0;">PWM voltage level</td><td><span class="status-tag pending">Pending</span></td></tr>
+            <tr style="border-bottom:1px solid rgba(255,255,255,0.05);"><td style="padding:6px 10px 6px 0;">Active-high vs active-low logic</td><td><span class="status-tag pending">Pending</span></td></tr>
+            <tr style="border-bottom:1px solid rgba(255,255,255,0.05);"><td style="padding:6px 10px 6px 0;">Internal pull-up behavior</td><td><span class="status-tag pending">Pending</span></td></tr>
+            <tr style="border-bottom:1px solid rgba(255,255,255,0.05);"><td style="padding:6px 10px 6px 0;">Minimum duty / off threshold</td><td><span class="status-tag pending">Pending</span></td></tr>
+            <tr style="border-bottom:1px solid rgba(255,255,255,0.05);"><td style="padding:6px 10px 6px 0;">Full-speed duty threshold</td><td><span class="status-tag pending">Pending</span></td></tr>
+            <tr style="border-bottom:1px solid rgba(255,255,255,0.05);"><td style="padding:6px 10px 6px 0;">Failsafe behavior on signal loss</td><td><span class="status-tag pending">Pending</span></td></tr>
+            <tr style="border-bottom:1px solid rgba(255,255,255,0.05);"><td style="padding:6px 10px 6px 0;">Startup current</td><td><span class="status-tag pending">Pending</span></td></tr>
+            <tr style="border-bottom:1px solid rgba(255,255,255,0.05);"><td style="padding:6px 10px 6px 0;">Full-load current</td><td><span class="status-tag pending">Pending</span></td></tr>
+            <tr style="border-bottom:1px solid rgba(255,255,255,0.05);"><td style="padding:6px 10px 6px 0;">Connector pinout</td><td><span class="status-tag pending">Pending</span></td></tr>
+            <tr><td style="padding:6px 10px 6px 0;">Direct E67 compatibility</td><td><span class="status-tag pending">Pending</span></td></tr>
+          </tbody>
+        </table>
+      </div>
+
+      <div class="info-box" style="border-left:3px solid var(--accent); margin-top:12px;">
+        <strong style="color:var(--accent-bright);">Power note.</strong>
+        If the fan is approximately 850 W, expected current is approximately <strong>61 A at 14 V</strong> and <strong>71 A at 12 V</strong>. <strong style="color:#e74c3c;">Final fuse and wire sizing must be based on measured current and OEM data, not catalog assumptions.</strong>
+      </div>
+    </div>
+
+  </div>
+</div>
+
 <!-- ═══════════════════════════════════════════════ ANOMALIES -->
 <div class="system-section" id="anomalies">
   <div class="system-header" onclick="toggleSection(this)">
@@ -2208,10 +2523,43 @@ body {
   </div>
 </div>
 
-<div class="page-footer">
-  E67 LL8 Complete Wiring Reference · ECM 12607096 YRH · Compiled 2026-04-29<br>
-  Sources: GM SI factory wiring diagrams (2008 Trailblazer 4WD L6-4.2L) · Vortec4200 Wiki (Nivlac57) · Physical connector verification 2026-04-28<br>
-  All technical assertions sourced from factory diagrams or labeled as inference. Do not treat inferred entries as confirmed until verified against factory source.
+<div class="page-footer" style="padding:24px 40px; background:var(--bg-card); border-top:1px solid var(--border);">
+
+  <!-- KNOWN-GOOD BENCH CONFIGURATION -->
+  <div style="margin-bottom:20px; background:var(--bg-elevated); border:1px solid var(--border-bright); border-left:4px solid #27ae60; padding:18px 22px;">
+    <div style="font-family:'Oswald',sans-serif; font-size:13px; letter-spacing:0.12em; text-transform:uppercase; color:#2ecc71; font-weight:700; margin-bottom:10px;">Known-Good Bench Configuration</div>
+    <table style="width:100%; border-collapse:collapse; font-size:12px; font-family:'JetBrains Mono',monospace;">
+      <tr style="border-bottom:1px solid rgba(255,255,255,0.04);"><td style="padding:5px 12px 5px 0; color:var(--text-faded); width:34%;">Harness Rev</td><td style="color:var(--text);"><em style="color:var(--text-faded);">[fill in]</em></td></tr>
+      <tr style="border-bottom:1px solid rgba(255,255,255,0.04);"><td style="padding:5px 12px 5px 0; color:var(--text-faded);">ECM</td><td style="color:var(--text);">12618163 / Service 12607096 / Broadcast YRH</td></tr>
+      <tr style="border-bottom:1px solid rgba(255,255,255,0.04);"><td style="padding:5px 12px 5px 0; color:var(--text-faded);">Known-good communication</td><td style="color:var(--text);">VATS removed and manual transmission calibration change completed</td></tr>
+      <tr style="border-bottom:1px solid rgba(255,255,255,0.04);"><td style="padding:5px 12px 5px 0; color:var(--text-faded);">Power supply</td><td style="color:var(--text);">12.0 V, current-limited</td></tr>
+      <tr style="border-bottom:1px solid rgba(255,255,255,0.04);"><td style="padding:5px 12px 5px 0; color:var(--text-faded);">Main switch</td><td style="color:var(--text);">installed</td></tr>
+      <tr style="border-bottom:1px solid rgba(255,255,255,0.04);"><td style="padding:5px 12px 5px 0; color:var(--text-faded);">Ignition switch</td><td style="color:var(--text);">installed</td></tr>
+      <tr style="border-bottom:1px solid rgba(255,255,255,0.04);"><td style="padding:5px 12px 5px 0; color:var(--text-faded);">OBDII</td><td style="color:var(--text);">Trailblazer donor port</td></tr>
+      <tr style="border-bottom:1px solid rgba(255,255,255,0.04);"><td style="padding:5px 12px 5px 0; color:var(--text-faded);">CAN terminator</td><td style="color:var(--text);">donor pigtail measured approximately 121 Ω with ECM disconnected</td></tr>
+      <tr><td style="padding:5px 12px 5px 0; color:var(--text-faded);">Last updated</td><td style="color:var(--text);">2026-05-09</td></tr>
+    </table>
+  </div>
+
+  <!-- STATUS LEGEND -->
+  <div style="margin-bottom:20px; padding:16px 22px; background:var(--bg-elevated); border:1px solid var(--border-bright);">
+    <div style="font-family:'Oswald',sans-serif; font-size:12px; letter-spacing:0.12em; text-transform:uppercase; color:var(--text); font-weight:700; margin-bottom:10px;">Status Tag Legend</div>
+    <div style="display:grid; grid-template-columns:repeat(auto-fit, minmax(200px, 1fr)); gap:8px 16px; font-size:11px; color:var(--text-dim); line-height:1.5;">
+      <div><span class="status-tag unverified">Unverified</span>not measured or sourced yet</div>
+      <div><span class="status-tag si-sourced">SI sourced</span>from GM SI / source docs, not physically verified</div>
+      <div><span class="status-tag physical">Physical</span>position and color physically verified on harness</div>
+      <div><span class="status-tag electrical">Electrical</span>measured with meter / scope / logic analyzer</div>
+      <div><span class="status-tag functional">Functional</span>proven to work on this bench fixture</div>
+      <div><span class="status-tag suspect">Suspect</span>data conflict — needs resolution</div>
+      <div><span class="status-tag pending">Pending</span>identified work item, not started</div>
+      <div><span class="status-tag final">Final validated</span>proven on actual target hardware</div>
+    </div>
+  </div>
+
+  <div style="font-size:11px; color:var(--text-faded); line-height:1.7;">
+    E67 LL8 Complete Wiring Reference · ECM 12607096 YRH · Last update 2026-05-09<br>
+    Sources: GM SI factory wiring diagrams (2008 Trailblazer 4WD L6-4.2L) · Vortec4200 Wiki (Nivlac57) · Physical X1 verification 2026-04-28 · Connector layout verification 2026-04-28<br>
+    All technical assertions sourced from factory diagrams or labeled as inference. <strong style="color:var(--accent-bright);">Do not treat inferred entries as confirmed until verified against factory source or measured electrically.</strong>
 </div>
 
 </div><!-- /main -->

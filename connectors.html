@@ -899,6 +899,71 @@
     color: var(--accent);
   }
 
+  /* VALIDATION STATUS BANNER */
+  .validation-banner {
+    margin: 0 24px 18px;
+    padding: 16px 20px;
+    background: linear-gradient(90deg, rgba(232,160,48,0.12) 0%, rgba(232,160,48,0.04) 100%);
+    border: 1px solid rgba(232,160,48,0.4);
+    border-left: 4px solid var(--accent);
+    display: flex;
+    align-items: flex-start;
+    gap: 14px;
+  }
+  .validation-banner-icon {
+    flex-shrink: 0;
+    width: 30px; height: 30px;
+    border-radius: 50%;
+    background: rgba(232,160,48,0.18);
+    border: 2px solid var(--accent);
+    color: var(--accent-bright);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-family: 'Oswald', sans-serif;
+    font-size: 17px;
+    font-weight: 900;
+  }
+  .validation-banner-text { flex: 1; line-height: 1.5; }
+  .validation-banner-title {
+    font-family: 'Oswald', sans-serif;
+    font-size: 11px;
+    letter-spacing: 0.18em;
+    text-transform: uppercase;
+    color: var(--accent-bright);
+    font-weight: 700;
+    margin-bottom: 5px;
+  }
+  .validation-banner-body {
+    font-size: 12px;
+    color: var(--text);
+  }
+  .validation-banner-body strong { color: var(--accent-bright); }
+  .validation-banner-body .vb-x1 { color: #56d364; font-weight: 700; }
+  .validation-banner-body .vb-x2x3 { color: var(--accent-bright); font-weight: 700; }
+
+  /* STATUS TAGS — used inline */
+  .status-tag {
+    display: inline-block;
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 9px;
+    font-weight: 700;
+    letter-spacing: 0.1em;
+    padding: 3px 7px;
+    border: 1px solid;
+    text-transform: uppercase;
+    white-space: nowrap;
+    margin: 0 3px 2px 0;
+  }
+  .status-tag.unverified  { background: rgba(110,118,129,0.15); border-color: var(--text-faded); color: var(--text-dim); }
+  .status-tag.si-sourced  { background: rgba(86,166,255,0.12); border-color: #58a6ff; color: #79b8ff; }
+  .status-tag.physical    { background: rgba(86,211,100,0.15); border-color: #56d364; color: #56d364; }
+  .status-tag.electrical  { background: rgba(86,166,255,0.18); border-color: #1a6b8a; color: #58c1d9; }
+  .status-tag.functional  { background: rgba(46,204,113,0.18); border-color: #27ae60; color: #2ecc71; }
+  .status-tag.suspect     { background: rgba(231,76,60,0.18); border-color: #e74c3c; color: #ff8a80; }
+  .status-tag.final       { background: rgba(232,160,48,0.18); border-color: var(--accent); color: var(--accent-bright); }
+  .status-tag.pending     { background: rgba(231,127,40,0.12); border-color: #e67e22; color: #f0a050; }
+
   .pin.dim, .pin-empty.dim { opacity: 0.15; }
 
   /* Search match highlight — distinct from click-target .highlighted (different glow color) */
@@ -980,7 +1045,7 @@
         <div class="meta-item-sm"><span class="meta-label-sm">Part No</span><span class="meta-value-sm">12618163</span></div>
         <div class="meta-item-sm"><span class="meta-label-sm">Service No</span><span class="meta-value-sm">12607096</span></div>
         <div class="meta-item-sm"><span class="meta-label-sm">Broadcast</span><span class="meta-value-sm">YRH</span></div>
-        <div class="meta-item-sm"><span class="meta-label-sm">Verified</span><span class="meta-value-sm">2026-04-28</span></div>
+        <div class="meta-item-sm"><span class="meta-label-sm">Last test</span><span class="meta-value-sm">2026-05-09</span></div>
       </div>
     </div>
 
@@ -1093,6 +1158,17 @@
 
   <main class="main">
 
+    <div class="validation-banner" style="margin-top:24px;">
+      <div class="validation-banner-icon">!</div>
+      <div class="validation-banner-text">
+        <div class="validation-banner-title">Current Validation Status</div>
+        <div class="validation-banner-body">
+          <span class="vb-x1">X1 / J1 (Blue):</span> position and wire color <strong>physically verified</strong>.
+          <span class="vb-x2x3">X2 / J2 (Black) and X3 / J3 (Grey):</span> connector layouts verified, but <strong>individual pin population, color, and function verification is still in progress</strong>. Do not treat X2 / X3 wiring as final until each circuit is marked physically verified or electrically observed.
+        </div>
+      </div>
+    </div>
+
     <section class="connector-section" id="section-x1">
       <div class="connector-header" onclick="toggleConnectorSection(this)">
         <div class="connector-title">X1 / J1<span class="connector-color-tag tag-blue">BLUE — 56 PIN</span></div>
@@ -1150,15 +1226,19 @@
         <div class="connector-collapse-icon"></div>
       </div>
       <div class="footer-notes-body">
+        <div class="info-box" style="border-left:3px solid #e74c3c; background:rgba(231,76,60,0.08); margin-bottom:14px;">
+          <strong style="color:#e74c3c;">Do not resolve any of the items below by assumption.</strong> Mark as <span class="status-tag suspect">Suspect</span> until confirmed by GM SI, continuity testing, or electrical behavior measurement.
+        </div>
         <ul>
-          <li>Two pins both labeled "Starter Enable Relay Control": <strong>X1-56 (YE/BK, 625)</strong> and <strong>X2-43 (YE, 6259, 4.2L)</strong>. Verify primary against factory wiring diagram before final connection.</li>
-          <li>Two pins both labeled "IC 4 Control" with circuit 2124: <strong>X2-18 (D-GN/WH, 0.5mm²)</strong> and <strong>X2-34 (D-GN/WH, 0.35mm²)</strong>. Same circuit on two pins is unusual — verify before wiring coils.</li>
+          <li>Two pins both labeled "Starter Enable Relay Control": <strong>X1-56 (YE/BK, 625)</strong> and <strong>X2-43 (YE, 6259, 4.2L)</strong>. <span class="status-tag suspect">Suspect / conflict</span> Verify primary against factory wiring diagram before final connection.</li>
+          <li>Two pins both labeled "IC 4 Control" with circuit 2124: <strong>X2-18 (D-GN/WH, 0.5mm²)</strong> and <strong>X2-34 (D-GN/WH, 0.35mm²)</strong>. Same circuit on two pins is unusual. <span class="status-tag suspect">Suspect / conflict</span> Verify before wiring coils.</li>
+          <li>Any pin/function conflict between CSV, SI, and physical harness should be flagged as <span class="status-tag suspect">Suspect</span> and resolved by physical continuity or scope measurement before final connection.</li>
           <li>Wire gauge guide: 0.35mm² ≈ 22 AWG, 0.5mm² ≈ 20 AWG, 1.0mm² ≈ 18 AWG (primary ground X2-73 is heavy gauge).</li>
           <li>Color codes: BK=Black, BN=Brown, RD=Red, OG=Orange, YE=Yellow, GN=Green, BU=Blue, PU=Purple, GY=Gray, WH=White, PK=Pink, TN=Tan. Prefix D-=Dark, L-=Light.</li>
           <li>Two-tone wire format: BASE/TRACER. The first color is the insulation jacket, the second is the stripe.</li>
           <li>4.2L tag indicates pin function is specific to the Atlas I6 calibration. Same physical pin position may have different function on 5.3L variant.</li>
-          <li>For bench flash minimum: power = X1-20 (B+); ignition = X1-18, X1-19, X2-13 tied; ground = X2-73 + low refs; CAN = X3-33 (low) + X3-53 (high).</li>
-          <li><strong>Connector layouts verified 2026-04-28</strong> against physical X1, X2, X3 connectors. X1: 4 cols × 14 rows uniform. X2/X3: 2+2 column structure — short side (left) 2 columns of 16 pins, long side (right) 2 columns of 20 pins, plus pin 73 in special larger position above short side.</li>
+          <li>For bench flash minimum: power = X1-20 (B+); ignition = X1-18, X1-19, X2-13 tied; ground = <strong>X2-73 + OBDII pins 4/5</strong>; CAN = X3-33 (low) + X3-53 (high). <span style="color:var(--text-faded);">Sensor low references are <em>not</em> primary grounds and are not required for bench flash.</span></li>
+          <li><strong>X1 layout + position + wire color physically verified 2026-04-28.</strong> X2/X3 connector layouts verified, but individual circuit population, color, and function verification is <span class="status-tag pending">In progress</span> as of 2026-05-09. X1: 4 cols × 14 rows uniform. X2/X3: 2+2 column structure — short side (left) 2 columns of 16 pins, long side (right) 2 columns of 20 pins, plus pin 73 in special larger position above short side.</li>
         </ul>
       </div>
     </div>
