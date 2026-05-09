@@ -2516,9 +2516,11 @@ body {
       <h4 style="color:var(--accent-bright);">Open Item — Internal CAN Terminator Verification</h4>
       Forum-reported that E67 has internal 120Ω CAN terminator. Verify empirically: with ECM disconnected, measure X3-33 to X3-53 — should read open if no internal terminator. With ECM connected, ignition off — should read ~60Ω if internal terminator present (two 120Ω in parallel with external). If reads 120Ω with ECM connected, no internal terminator and external 120Ω is the only terminator.
     </div>
-    <div class="anomaly-box" style="border-color:rgba(240,184,64,0.4);background:rgba(240,184,64,0.05);">
-      <h4 style="color:var(--accent-bright);">Open Item — Fan Control Calibration Status</h4>
-      Factory diagram confirms PWM fan output pins exist on 4.2L ECM (X1-23, X2-21, X1-4, X1-51). Whether the YRH broadcast code calibration has these outputs active or enabled is not confirmed. Verify in HP Tuners VCM Editor after bench flash before planning electric fan install.
+    <div class="anomaly-box" style="border-color:rgba(231,76,60,0.4);background:rgba(231,76,60,0.06);">
+      <h4 style="color:#e74c3c;">Open Item — Fan Control Output Pins (UNVERIFIED CLAIM)</h4>
+      <span class="status-tag suspect">Unverified prior assertion</span><br><br>
+      Earlier project notes asserted that <code>X1-23, X2-21, X1-4, X1-51</code> are PWM fan output pins on the 4.2L ECM. <strong style="color:#e74c3c;">This claim was not pulled from confirmed GM SI source documentation</strong> — it appears to come from prior AI-generated text and has not been independently verified against a factory diagram, the YRH calibration map, or electrical measurement on this ECM.<br><br>
+      Treat the candidate-pin list as <strong>provisional</strong> until either (a) confirmed against a factory wiring diagram for the 2008-2009 Trailblazer 4.2L Atlas I6 / E67 calibration, or (b) electrically observed using the KOEO Fan Output Discovery Test in the <a href="#fan-control" style="color:var(--accent);">Cooling Fan Control</a> section. Do not wire a fan to any of these pins on the strength of this claim alone.
     </div>
   </div>
 </div>
