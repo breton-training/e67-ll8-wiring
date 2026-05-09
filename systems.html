@@ -459,6 +459,21 @@ body {
 .status-tag.final       { background: rgba(232,160,48,0.18); border-color: var(--accent); color: var(--accent-bright); }
 .status-tag.pending     { background: rgba(231,127,40,0.12); border-color: #e67e22; color: #f0a050; }
 
+/* Per-section status meta line — appears under each system-section subtitle */
+.system-meta {
+  font-size: 10.5px;
+  color: var(--text-faded);
+  letter-spacing: 0.06em;
+  margin-top: 6px;
+  font-family: 'JetBrains Mono', monospace;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  flex-wrap: wrap;
+}
+.system-meta strong { color: var(--text); font-weight: 700; }
+.system-meta .meta-sep { color: var(--border-bright); }
+
 /* SYSTEM SECTIONS */
 .system-section {
   margin: 0;
@@ -815,6 +830,7 @@ body {
       <div class="meta-item"><div class="meta-dot"></div>Broadcast: YRH</div>
       <div class="meta-item"><div class="meta-dot"></div>App: 2008-2009 Trailblazer LL8 4.2L I6</div>
       <div class="meta-item"><div class="meta-dot"></div>Last test: 2026-05-09</div>
+      <div class="meta-item"><div class="meta-dot"></div>Rev: v0.5</div>
     </div>
   </div>
 
@@ -2539,22 +2555,24 @@ body {
       <tr style="border-bottom:1px solid rgba(255,255,255,0.04);"><td style="padding:5px 12px 5px 0; color:var(--text-faded);">Ignition switch</td><td style="color:var(--text);">installed</td></tr>
       <tr style="border-bottom:1px solid rgba(255,255,255,0.04);"><td style="padding:5px 12px 5px 0; color:var(--text-faded);">OBDII</td><td style="color:var(--text);">Trailblazer donor port</td></tr>
       <tr style="border-bottom:1px solid rgba(255,255,255,0.04);"><td style="padding:5px 12px 5px 0; color:var(--text-faded);">CAN terminator</td><td style="color:var(--text);">donor pigtail measured approximately 121 Ω with ECM disconnected</td></tr>
-      <tr><td style="padding:5px 12px 5px 0; color:var(--text-faded);">Last updated</td><td style="color:var(--text);">2026-05-09</td></tr>
+      <tr style="border-bottom:1px solid rgba(255,255,255,0.04);"><td style="padding:5px 12px 5px 0; color:var(--text-faded);">Last updated</td><td style="color:var(--text);">2026-05-09</td></tr>
+      <tr><td style="padding:5px 12px 5px 0; color:var(--text-faded);">Revision</td><td style="color:var(--text);">v0.5</td></tr>
     </table>
   </div>
 
   <!-- STATUS LEGEND -->
   <div style="margin-bottom:20px; padding:16px 22px; background:var(--bg-elevated); border:1px solid var(--border-bright);">
-    <div style="font-family:'Oswald',sans-serif; font-size:12px; letter-spacing:0.12em; text-transform:uppercase; color:var(--text); font-weight:700; margin-bottom:10px;">Status Tag Legend</div>
-    <div style="display:grid; grid-template-columns:repeat(auto-fit, minmax(200px, 1fr)); gap:8px 16px; font-size:11px; color:var(--text-dim); line-height:1.5;">
-      <div><span class="status-tag unverified">Unverified</span>not measured or sourced yet</div>
-      <div><span class="status-tag si-sourced">SI sourced</span>from GM SI / source docs, not physically verified</div>
-      <div><span class="status-tag physical">Physical</span>position and color physically verified on harness</div>
-      <div><span class="status-tag electrical">Electrical</span>measured with meter / scope / logic analyzer</div>
-      <div><span class="status-tag functional">Functional</span>proven to work on this bench fixture</div>
-      <div><span class="status-tag suspect">Suspect</span>data conflict — needs resolution</div>
-      <div><span class="status-tag pending">Pending</span>identified work item, not started</div>
-      <div><span class="status-tag final">Final validated</span>proven on actual target hardware</div>
+    <div style="font-family:'Oswald',sans-serif; font-size:12px; letter-spacing:0.12em; text-transform:uppercase; color:var(--text); font-weight:700; margin-bottom:4px;">Source Tier Tags</div>
+    <div style="font-size:10.5px; color:var(--text-faded); margin-bottom:12px; font-family:'JetBrains Mono',monospace;">Compact 2-letter codes used inline · long form shown for reference</div>
+    <div style="display:grid; grid-template-columns:repeat(auto-fit, minmax(260px, 1fr)); gap:10px 22px; font-size:11px; color:var(--text-dim); line-height:1.55;">
+      <div><span class="status-tag si-sourced">SI</span><strong style="color:var(--text);">SI sourced</strong> — GM documentation / source docs only</div>
+      <div><span class="status-tag physical">PV</span><strong style="color:var(--text);">Physically verified</strong> — position, color, continuity</div>
+      <div><span class="status-tag electrical">EO</span><strong style="color:var(--text);">Electrically observed</strong> — measured with meter / scope</div>
+      <div><span class="status-tag functional">FN</span><strong style="color:var(--text);">Functional</strong> — proven on this bench fixture</div>
+      <div><span class="status-tag final">FV</span><strong style="color:var(--text);">Final validated</strong> — proven on actual target hardware</div>
+      <div><span class="status-tag suspect">SU</span><strong style="color:var(--text);">Suspect / conflict</strong> — needs resolution</div>
+      <div><span class="status-tag pending">··</span><strong style="color:var(--text);">Pending</strong> — identified work item, not started</div>
+      <div><span class="status-tag unverified">??</span><strong style="color:var(--text);">Unverified</strong> — not measured or sourced yet</div>
     </div>
   </div>
 
@@ -2623,6 +2641,63 @@ function updateSectionStateReadout() {
 }
 
 document.addEventListener('DOMContentLoaded', updateSectionStateReadout);
+
+// Per-section validation status — single source of truth for the meta line
+// rendered under each system-section subtitle. Tier codes:
+//   SI = GM SI / source docs only
+//   PV = position / color physically verified
+//   EO = electrically observed (meter / scope)
+//   FN = functional on bench fixture
+//   FV = final validated on target hardware
+//   SU = suspect / conflict
+const SECTION_STATUS = {
+  bench:        { date: '2026-05-09', tier: 'FN', cls: 'functional' },
+  fixture:      { date: '2026-05-09', tier: 'FN', cls: 'functional' },
+  power:        { date: '2026-05-09', tier: 'FN', cls: 'functional', note: 'X1-20 B+, X2-13 IGN, X2-73 GND verified live' },
+  ignition:     { date: '2026-05-09', tier: 'FN', cls: 'functional' },
+  comm:         { date: '2026-05-09', tier: 'FN', cls: 'functional', note: 'HP Tuners comm proven' },
+  injectors:    { date: 'pending',    tier: 'SI', cls: 'si-sourced' },
+  coils:        { date: 'pending',    tier: 'SU', cls: 'suspect',   note: 'IC4 dual-pin conflict X2-18 vs X2-34' },
+  fuel:         { date: 'pending',    tier: 'SI', cls: 'si-sourced' },
+  sensors:      { date: 'pending',    tier: 'SI', cls: 'si-sourced' },
+  o2:           { date: 'pending',    tier: 'SI', cls: 'si-sourced' },
+  knock:        { date: 'pending',    tier: 'SI', cls: 'si-sourced' },
+  throttle:     { date: 'pending',    tier: 'SI', cls: 'si-sourced' },
+  vvt:          { date: 'pending',    tier: 'SI', cls: 'si-sourced' },
+  relays:       { date: 'pending',    tier: 'SI', cls: 'si-sourced' },
+  charging:     { date: 'pending',    tier: 'SI', cls: 'si-sourced' },
+  starter:      { date: 'pending',    tier: 'SU', cls: 'suspect',   note: 'X1-56 vs X2-43 conflict' },
+  cruise:       { date: 'pending',    tier: 'SI', cls: 'si-sourced' },
+  evap:         { date: 'pending',    tier: 'SI', cls: 'si-sourced' },
+  'fan-control':{ date: 'pending',    tier: 'SI', cls: 'si-sourced', note: 'candidate output pins UNVERIFIED' }
+};
+
+function injectSectionMeta() {
+  for (const id in SECTION_STATUS) {
+    const status = SECTION_STATUS[id];
+    const sec = document.getElementById(id);
+    if (!sec) continue;
+    const header = sec.querySelector('.system-header');
+    if (!header) continue;
+    // The middle column of the header is the second <div> (after color-bar)
+    const titleBlock = Array.from(header.children).find(c => c.tagName === 'DIV' && !c.classList.contains('system-color-bar') && !c.classList.contains('collapse-icon'));
+    if (!titleBlock || titleBlock.querySelector('.system-meta')) continue;
+    const meta = document.createElement('div');
+    meta.className = 'system-meta';
+    let html = '<span class="status-tag ' + status.cls + '">' + status.tier + '</span>';
+    if (status.date === 'pending') {
+      html += 'Last verified: <strong>pending</strong>';
+    } else {
+      html += 'Last verified: <strong>' + status.date + '</strong>';
+    }
+    if (status.note) {
+      html += '<span class="meta-sep">·</span><span style="color:var(--text-dim);">' + status.note + '</span>';
+    }
+    meta.innerHTML = html;
+    titleBlock.appendChild(meta);
+  }
+}
+document.addEventListener('DOMContentLoaded', injectSectionMeta);
 
 function doSearch(val) {
   const q = val.toLowerCase().trim();

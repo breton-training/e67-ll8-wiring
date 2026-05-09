@@ -964,6 +964,21 @@
   .status-tag.final       { background: rgba(232,160,48,0.18); border-color: var(--accent); color: var(--accent-bright); }
   .status-tag.pending     { background: rgba(231,127,40,0.12); border-color: #e67e22; color: #f0a050; }
 
+  /* Per-connector status meta line — appears in connector header */
+  .connector-meta {
+    font-size: 10.5px;
+    color: var(--text-faded);
+    letter-spacing: 0.06em;
+    margin-top: 6px;
+    font-family: 'JetBrains Mono', monospace;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    flex-wrap: wrap;
+  }
+  .connector-meta strong { color: var(--text); font-weight: 700; }
+  .connector-meta .meta-sep { color: var(--border-bright); }
+
   .pin.dim, .pin-empty.dim { opacity: 0.15; }
 
   /* Search match highlight — distinct from click-target .highlighted (different glow color) */
@@ -1046,6 +1061,7 @@
         <div class="meta-item-sm"><span class="meta-label-sm">Service No</span><span class="meta-value-sm">12607096</span></div>
         <div class="meta-item-sm"><span class="meta-label-sm">Broadcast</span><span class="meta-value-sm">YRH</span></div>
         <div class="meta-item-sm"><span class="meta-label-sm">Last test</span><span class="meta-value-sm">2026-05-09</span></div>
+        <div class="meta-item-sm"><span class="meta-label-sm">Revision</span><span class="meta-value-sm">v0.5</span></div>
       </div>
     </div>
 
@@ -1915,6 +1931,46 @@ function collapseAllConnectors() {
     }
   }
 })();
+
+// Per-connector validation status. Tier codes:
+//   SI = GM SI / source docs only
+//   PV = position / color physically verified
+//   EO = electrically observed
+//   FN = functional on bench
+//   FV = final validated on target
+//   SU = suspect / conflict
+const CONNECTOR_STATUS = {
+  'section-x1': { date: '2026-04-28', tier: 'PV', cls: 'physical',   note: 'position + color verified end-to-end' },
+  'section-x2': { date: 'pending',    tier: 'SI', cls: 'si-sourced', note: 'layout PV; pin-by-pin verification in progress' },
+  'section-x3': { date: 'pending',    tier: 'SI', cls: 'si-sourced', note: 'layout PV; pin-by-pin verification in progress' }
+};
+
+function injectConnectorMeta() {
+  for (const id in CONNECTOR_STATUS) {
+    const status = CONNECTOR_STATUS[id];
+    const sec = document.getElementById(id);
+    if (!sec) continue;
+    const header = sec.querySelector('.connector-header');
+    if (!header || header.querySelector('.connector-meta')) continue;
+    // Append meta into the existing connector-stats block so it sits alongside the populated count
+    const stats = header.querySelector('.connector-stats');
+    if (!stats) continue;
+    const meta = document.createElement('div');
+    meta.className = 'connector-meta';
+    let html = '<span class="status-tag ' + status.cls + '">' + status.tier + '</span>';
+    if (status.date === 'pending') {
+      html += '<strong>pending</strong>';
+    } else {
+      html += '<strong>' + status.date + '</strong>';
+    }
+    if (status.note) {
+      html += '<span class="meta-sep">·</span><span style="color:var(--text-dim);">' + status.note + '</span>';
+    }
+    meta.innerHTML = html;
+    stats.appendChild(meta);
+  }
+}
+document.addEventListener('DOMContentLoaded', injectConnectorMeta);
 
 // Filter buttons drive currentFilter and re-apply the unified filter
 const filterBtns = document.querySelectorAll('.filter-btn');
